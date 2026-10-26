@@ -137,7 +137,6 @@
     "saved": "Saved",
     "deleteTitle": "Delete account",
     "deleteNeedsSignIn": "For your security, sign in again before deleting your account",
-    "nameHint": "Shown to you in the console. Customers see the shop name, not this.",
     "deleteDescription": "Planned emails are canceled and your customers get no more emails. You will no longer be able to sign in. This cannot be undone.",
     "deleteConfirmPrompt": "To confirm, type your email address",
     "deleteButton": "Delete account",

@@ -97,7 +97,6 @@ function ShopForm({ current, ownerEmail }: { current: ShopRecord | null; ownerEm
             value={form.shipping}
             onChange={(e) => set({ shipping: e.target.value })}
           />
-          <span className="console-hint">{t("settings.shippingHint")}</span>
         </label>
       </div>
       <div className="flex justify-end">

@@ -73,7 +73,7 @@
   },
   "products": {
     "title": "Products",
-    "description": "The AI only recommends active products that are in stock. Edit price, stock and notes in the table.",
+    "description": "Edit price, stock and notes in the table.",
     "add": "Add product",
     "saved": "Saved",
     "created": "Product added",
@@ -103,7 +103,6 @@
     "payeeHint": "In the sandbox, use a sandbox business account email.",
     "currency": "Currency (ISO code, e.g. USD)",
     "shipping": "Shipping per order",
-    "shippingHint": "Added to every order, wherever it ships.",
     "saved": "Saved"
   }
 }

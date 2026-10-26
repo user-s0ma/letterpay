@@ -137,7 +137,6 @@
     "saved": "保存しました",
     "deleteTitle": "アカウントを削除",
     "deleteNeedsSignIn": "安全のため、ログインし直してから削除してください",
-    "nameHint": "コンソールでだけ表示されます。客には店の名前が表示されます。",
     "deleteDescription": "予定のメールは止まり、客にはもう届きません。ログインもできなくなります。元に戻せません。",
     "deleteConfirmPrompt": "確認のため、メールアドレスを入力してください",
     "deleteButton": "アカウントを削除",
