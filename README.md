@@ -25,7 +25,7 @@ The main screen is an **AG Grid** table with one row per customer: consent, orde
 - **Claude** (`claude-sonnet-5-5` by default, set in `wrangler.jsonc`) through the Anthropic TypeScript SDK with structured outputs
 - **AG Grid** Community for the console tables
 - TiDB Serverless (MySQL) with Drizzle, better-auth (email/password and Google), Cloudflare Turnstile
-- Email through the Cloudflare Email Service REST API
+- Email through the Cloudflare Email Service Workers binding (`send_email`), with `List-Unsubscribe` one-click headers
 
 ## Run it locally
 

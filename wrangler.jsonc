@@ -12,10 +12,15 @@
     // Cloudflare Turnstile のサイトキー (下は常に通るテスト用の値。公開前に本物に替える)
     "VITE_PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
     "AUTH_EMAIL_FROM": "noreply@example.com",
-    "LETTER_EMAIL_FROM": "Hoshizora Coffee <letters@example.com>",
+    "LETTER_EMAIL_FROM": "letters@example.com",
     "PAYPAL_API_BASE": "https://api-m.sandbox.paypal.com",
     "ANTHROPIC_MODEL": "claude-sonnet-5-5"
   },
+  "send_email": [
+    {
+      "name": "EMAIL"
+    }
+  ],
   "assets": {
     "binding": "ASSETS",
     "directory": "build/client"

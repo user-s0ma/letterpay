@@ -1,7 +1,6 @@
 import { and, asc, desc, eq, inArray, isNull, lte, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
 import { customer, letter, product, purchase, shop } from "@/lib/db/schema";
-import { sendEmail } from "@/lib/email/send";
 import { captureOrder, createOrder } from "@/lib/paypal";
 import { renderLetterEmail } from "./email";
 import { planNextLetter, PlanRejected, writeReason, type PlannerContext } from "./planner";
@@ -186,6 +185,7 @@ export async function sendLetter(env: Env, row: LetterRow) {
   }
 
   const base = appUrl(env);
+  const unsubscribeUrl = `${base}/u/${await createLinkToken(env.LINK_SIGNING_SECRET, "unsubscribe", row.id)}`;
   const message = renderLetterEmail({
     shopName: owner.name,
     customerName: person.name,
@@ -196,10 +196,20 @@ export async function sendLetter(env: Env, row: LetterRow) {
     shippingMinor: owner.shippingMinor,
     currency: owner.currency,
     payUrl: `${base}/l/${await createLinkToken(env.LINK_SIGNING_SECRET, "pay", row.id)}`,
-    unsubscribeUrl: `${base}/u/${await createLinkToken(env.LINK_SIGNING_SECRET, "unsubscribe", row.id)}`,
+    unsubscribeUrl,
   });
   try {
-    await sendEmail(env, { from: env.LETTER_EMAIL_FROM, to: person.email, ...message });
+    await env.EMAIL.send({
+      // 送り元の名前は店の名前にする (客にとっての相手は店)
+      from: { name: owner.name, email: env.LETTER_EMAIL_FROM },
+      to: person.email,
+      ...message,
+      // メールソフトの「配信停止」ボタンから、1回で止められるようにする (/u/:token への POST)
+      headers: {
+        "List-Unsubscribe": `<${unsubscribeUrl}>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      },
+    });
   } catch (error) {
     await db
       .update(letter)

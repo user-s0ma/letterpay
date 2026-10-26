@@ -4,7 +4,6 @@ import { captcha } from "better-auth/plugins";
 import { getDb } from "../db/client";
 import { detectLocale, translate } from "../i18n";
 import { cancelPlannedLetters } from "../letters/service";
-import { sendEmail } from "../email/send";
 import * as schema from "../db/schema";
 
 function escapeHtml(value: string) {
@@ -92,7 +91,7 @@ function createAuth(env: AppEnv, requestOrigin?: string) {
       revokeSessionsOnPasswordReset: true,
       async sendResetPassword({ user, url }, request) {
         const locale = detectLocale(request);
-        await sendEmail(env, {
+        await env.EMAIL.send({
           from: emailFrom,
           to: user.email,
           subject: translate(locale, "email.reset.subject"),
@@ -114,7 +113,7 @@ function createAuth(env: AppEnv, requestOrigin?: string) {
       expiresIn: 60 * 60,
       async sendVerificationEmail({ user, url }, request) {
         const locale = detectLocale(request);
-        await sendEmail(env, {
+        await env.EMAIL.send({
           from: emailFrom,
           to: user.email,
           subject: translate(locale, "email.verify.subject"),

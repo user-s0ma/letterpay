@@ -11,10 +11,6 @@ GOOGLE_OAUTH_CLIENT_SECRET=your-google-client-secret
 # Leave empty to disable the captcha in local development (http:// only)
 TURNSTILE_SECRET_KEY=
 
-# --- Email (Cloudflare Email Service REST API, token with Email Sending permission)
-CLOUDFLARE_ACCOUNT_ID=
-CLOUDFLARE_EMAIL_API_TOKEN=
-
 # --- PayPal (REST app from developer.paypal.com, sandbox)
 PAYPAL_CLIENT_ID=
 PAYPAL_CLIENT_SECRET=
