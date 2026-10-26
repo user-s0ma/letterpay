@@ -57,7 +57,8 @@
     "result": {
       "sent": "送った",
       "clicked": "リンクを開いた",
-      "paid": "払った"
+      "paid": "払った",
+      "paidPending": "払った（PayPal で受け取り待ち）"
     },
     "panel": {
       "next": "次のメール",

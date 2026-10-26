@@ -170,7 +170,7 @@ export function LettersGrid({ rows, products, formatMoney, onEdit, onOpen }: Pro
             width: 120,
             valueGetter: (params) => params.data?.lastSent?.result ?? null,
             valueFormatter: (params) => (params.value ? t(`letters.result.${params.value}`) : "—"),
-            cellClassRules: { "text-earn font-semibold": (params) => params.value === "paid" },
+            cellClassRules: { "text-earn font-semibold": (params) => params.value === "paid" || params.value === "paidPending" },
           },
         ],
       },

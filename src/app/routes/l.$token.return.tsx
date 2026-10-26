@@ -15,7 +15,7 @@ export async function loader({ params, request, context }: Route.LoaderArgs) {
   const { env } = context.get(appContext);
   const letterId = await readLinkToken(env.LINK_SIGNING_SECRET, "pay", params.token);
   const orderId = new URL(request.url).searchParams.get("token");
-  if (!letterId || !orderId) return { state: "unavailable" as const, shopName: null, paid: null };
+  if (!letterId || !orderId) return { state: "unavailable" as const, shopName: null, paid: null, pending: false };
   try {
     const result = await completeCheckout(env, letterId, orderId);
     if (result.state === "paid") {
@@ -23,30 +23,35 @@ export async function loader({ params, request, context }: Route.LoaderArgs) {
         state: result.state,
         shopName: result.shopName,
         paid: result.paidMinor === null ? null : formatMoney(result.paidMinor, result.currency),
+        pending: result.pending,
       };
     }
-    if (result.state === "not_completed") return { state: result.state, shopName: result.shopName, paid: null };
-    return { state: result.state, shopName: null, paid: null };
+    if (result.state === "not_completed") return { state: result.state, shopName: result.shopName, paid: null, pending: false };
+    return { state: result.state, shopName: null, paid: null, pending: false };
   } catch (error) {
     console.error("代金を受け取れませんでした:", letterId, orderId, error);
-    return { state: "error" as const, shopName: null, paid: null };
+    return { state: "error" as const, shopName: null, paid: null, pending: false };
   }
 }
 
 export default function PayReturn({ loaderData }: Route.ComponentProps) {
-  const { state, shopName, paid } = loaderData;
+  const { state, shopName, paid, pending } = loaderData;
   if (state === "paid") {
     return (
       <LetterNotice shopName={shopName} title="Thank you for your order">
         {paid && <p className="num text-base font-semibold text-ink">{paid} paid with PayPal</p>}
-        <p className="mt-2">We will roast and ship it to the address in your PayPal account. A receipt is on its way from PayPal.</p>
+        <p className="mt-2">
+          {pending
+            ? "PayPal is still processing this payment. You will get a receipt from PayPal once it goes through, and we will ship to the address in your PayPal account."
+            : "We will roast and ship it to the address in your PayPal account. A receipt is on its way from PayPal."}
+        </p>
       </LetterNotice>
     );
   }
   if (state === "not_completed") {
     return (
       <LetterNotice shopName={shopName} title="The payment did not go through">
-        Nothing was charged. You can open the link in the email again to retry.
+        PayPal did not take the payment. You can open the link in the email again to retry.
       </LetterNotice>
     );
   }

@@ -129,6 +129,8 @@ export const letter = sqliteTable(
     paypalOrderId: text("paypalOrderId"),
     checkoutUnitMinor: integer("checkoutUnitMinor"),
     paypalCaptureId: text("paypalCaptureId"),
+    /** COMPLETED / PENDING。PENDING は客の支払いは済み、店の受け取りが待ちの状態 */
+    paypalCaptureStatus: text("paypalCaptureStatus"),
     /** 払われた額 (送料込み) */
     paidMinor: integer("paidMinor"),
     error: text("error"),

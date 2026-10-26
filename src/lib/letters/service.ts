@@ -296,13 +296,26 @@ export async function completeCheckout(env: Env, letterId: string, paypalOrderId
   const row = await loadLetter(env, letterId);
   if (!row) return { state: "unavailable" as const };
   const owner = await loadShop(env, row.userId);
-  if (row.status === "paid") return { state: "paid" as const, shopName: owner.name, paidMinor: row.paidMinor, currency: owner.currency };
+  if (row.status === "paid") {
+    return {
+      state: "paid" as const,
+      shopName: owner.name,
+      paidMinor: row.paidMinor,
+      currency: owner.currency,
+      pending: row.paypalCaptureStatus === "PENDING",
+    };
+  }
   // 戻り先の URL の注文 ID は書き換えられるので、このメールで作った注文かを確かめる
   if (row.paypalOrderId !== paypalOrderId) return { state: "unavailable" as const };
 
   const capture = await captureOrder(env, paypalOrderId);
-  if (capture.customId !== row.id || capture.status !== "COMPLETED" || !capture.captureId) {
+  if (capture && capture.customId !== row.id) return { state: "unavailable" as const };
+  // 受け取りが待ち (PENDING) でも客の支払いは済んでいるので、購入として記録する
+  if (!capture || (capture.status !== "COMPLETED" && capture.status !== "PENDING")) {
     return { state: "not_completed" as const, shopName: owner.name };
+  }
+  if (capture.status === "PENDING") {
+    console.error("PayPal の受け取りが待ちになっています:", paypalOrderId, capture.pendingReason);
   }
   if (row.checkoutUnitMinor === null) throw new LetterError("The checkout price was not recorded");
   const unitPriceMinor = row.checkoutUnitMinor;
@@ -312,7 +325,13 @@ export async function completeCheckout(env: Env, letterId: string, paypalOrderId
   await db.batch([
     db
       .update(letter)
-      .set({ status: "paid", paidAt: now, paypalCaptureId: capture.captureId, paidMinor: capture.amountMinor })
+      .set({
+        status: "paid",
+        paidAt: now,
+        paypalCaptureId: capture.id,
+        paypalCaptureStatus: capture.status,
+        paidMinor: capture.amountMinor,
+      })
       .where(eq(letter.id, row.id)),
     db.insert(purchase).values({
       id: crypto.randomUUID(),
@@ -334,7 +353,13 @@ export async function completeCheckout(env: Env, letterId: string, paypalOrderId
   await planFor(env, row.userId, row.customerId).catch((error) =>
     console.error("次のメールを決められませんでした:", row.customerId, error),
   );
-  return { state: "paid" as const, shopName: owner.name, paidMinor: capture.amountMinor, currency: owner.currency };
+  return {
+    state: "paid" as const,
+    shopName: owner.name,
+    paidMinor: capture.amountMinor,
+    currency: owner.currency,
+    pending: capture.status === "PENDING",
+  };
 }
 
 /** アカウントを消すときに、まだ送っていないメールをすべて取り消す */
@@ -417,7 +442,14 @@ export async function listLetterRows(env: Env, userId: string) {
         id: lastSent.id,
         sentOn: lastSent.sentAt ? utcDate(lastSent.sentAt) : null,
         productName: productName.get(lastSent.productId) ?? "",
-        result: lastSent.status === "paid" ? "paid" : lastSent.clickedAt ? "clicked" : "sent",
+        result:
+          lastSent.status === "paid"
+            ? lastSent.paypalCaptureStatus === "PENDING"
+              ? "paidPending"
+              : "paid"
+            : lastSent.clickedAt
+              ? "clicked"
+              : "sent",
       },
     };
   });
