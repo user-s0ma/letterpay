@@ -79,7 +79,7 @@ function createAuth(env: AppEnv, requestOrigin?: string) {
     secret: env.BETTER_AUTH_SECRET,
     baseURL,
     database: drizzleAdapter(getDb(env), {
-      provider: "mysql",
+      provider: "sqlite",
       schema,
     }),
     emailAndPassword: {

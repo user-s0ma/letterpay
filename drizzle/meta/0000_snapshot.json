@@ -1,7 +1,7 @@
 {
-  "version": "5",
-  "dialect": "mysql",
-  "id": "88939c88-d79e-4898-9f12-b6649b1efe19",
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "0f2c3acc-2385-4665-942c-92d6d30a67b5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "Account": {
@@ -9,28 +9,28 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(191)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "accountId": {
           "name": "accountId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "providerId": {
           "name": "providerId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "userId": {
           "name": "userId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -58,14 +58,14 @@
         },
         "accessTokenExpiresAt": {
           "name": "accessTokenExpiresAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "refreshTokenExpiresAt": {
           "name": "refreshTokenExpiresAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -86,19 +86,17 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -119,56 +117,47 @@
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Account_id": {
-          "name": "Account_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     },
     "Session": {
       "name": "Session",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(191)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "expiresAt": {
           "name": "expiresAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "token": {
           "name": "token",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         },
         "ipAddress": {
           "name": "ipAddress",
@@ -186,13 +175,20 @@
         },
         "userId": {
           "name": "userId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         }
       },
       "indexes": {
+        "Session_token_unique": {
+          "name": "Session_token_unique",
+          "columns": [
+            "token"
+          ],
+          "isUnique": true
+        },
         "Session_userId_idx": {
           "name": "Session_userId_idx",
           "columns": [
@@ -202,51 +198,37 @@
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Session_id": {
-          "name": "Session_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "Session_token_unique": {
-          "name": "Session_token_unique",
-          "columns": [
-            "token"
-          ]
-        }
-      },
-      "checkConstraint": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
     },
     "User": {
       "name": "User",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(191)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "email": {
           "name": "email",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "emailVerified": {
           "name": "emailVerified",
-          "type": "boolean",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -261,54 +243,46 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "User_id": {
-          "name": "User_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
+      "indexes": {
         "User_email_unique": {
           "name": "User_email_unique",
           "columns": [
             "email"
-          ]
+          ],
+          "isUnique": true
         }
       },
-      "checkConstraint": {}
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
     },
     "Verification": {
       "name": "Verification",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(191)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "identifier": {
           "name": "identifier",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -322,96 +296,87 @@
         },
         "expiresAt": {
           "name": "expiresAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Verification_id": {
-          "name": "Verification_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     },
     "Customer": {
       "name": "Customer",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(191)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "userId": {
           "name": "userId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(120)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "email": {
           "name": "email",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "country": {
           "name": "country",
-          "type": "varchar(2)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "marketingConsentAt": {
           "name": "marketingConsentAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "unsubscribedAt": {
           "name": "unsubscribedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "lettersStoppedAt": {
           "name": "lettersStoppedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -425,19 +390,17 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -451,51 +414,44 @@
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Customer_id": {
-          "name": "Customer_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     },
     "Letter": {
       "name": "Letter",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(191)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "userId": {
           "name": "userId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "customerId": {
           "name": "customerId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "status": {
           "name": "status",
-          "type": "varchar(16)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "sendOn": {
           "name": "sendOn",
-          "type": "date",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -509,14 +465,14 @@
         },
         "productId": {
           "name": "productId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "quantity": {
           "name": "quantity",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -530,7 +486,7 @@
         },
         "editedByOwner": {
           "name": "editedByOwner",
-          "type": "boolean",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -538,75 +494,73 @@
         },
         "sentAt": {
           "name": "sentAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "clickedAt": {
           "name": "clickedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "paidAt": {
           "name": "paidAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "paypalOrderId": {
           "name": "paypalOrderId",
-          "type": "varchar(64)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "checkoutUnitMinor": {
           "name": "checkoutUnitMinor",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "paypalCaptureId": {
           "name": "paypalCaptureId",
-          "type": "varchar(64)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "paidMinor": {
           "name": "paidMinor",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "error": {
           "name": "error",
-          "type": "varchar(500)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -637,51 +591,44 @@
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Letter_id": {
-          "name": "Letter_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     },
     "Product": {
       "name": "Product",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(191)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "userId": {
           "name": "userId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(120)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "origin": {
           "name": "origin",
-          "type": "varchar(120)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "roast": {
           "name": "roast",
-          "type": "varchar(16)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -695,35 +642,35 @@
         },
         "bagGrams": {
           "name": "bagGrams",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "priceMinor": {
           "name": "priceMinor",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "stock": {
           "name": "stock",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "arrivedOn": {
           "name": "arrivedOn",
-          "type": "date",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "active": {
           "name": "active",
-          "type": "boolean",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -731,19 +678,17 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -756,90 +701,82 @@
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Product_id": {
-          "name": "Product_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     },
     "Purchase": {
       "name": "Purchase",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(191)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "userId": {
           "name": "userId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "customerId": {
           "name": "customerId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "productId": {
           "name": "productId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "quantity": {
           "name": "quantity",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "unitPriceMinor": {
           "name": "unitPriceMinor",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "source": {
           "name": "source",
-          "type": "varchar(16)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "letterId": {
           "name": "letterId",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "purchasedAt": {
           "name": "purchasedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -860,94 +797,78 @@
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Purchase_id": {
-          "name": "Purchase_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     },
     "Shop": {
       "name": "Shop",
       "columns": {
         "userId": {
           "name": "userId",
-          "type": "varchar(191)",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(120)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "payeeEmail": {
           "name": "payeeEmail",
-          "type": "varchar(191)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "currency": {
           "name": "currency",
-          "type": "varchar(3)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "shippingMinor": {
           "name": "shippingMinor",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime(3)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Shop_userId": {
-          "name": "Shop_userId",
-          "columns": [
-            "userId"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraint": {}
+      "checkConstraints": {}
     }
   },
   "views": {},
+  "enums": {},
   "_meta": {
     "schemas": {},
     "tables": {},
     "columns": {}
   },
   "internal": {
-    "tables": {},
     "indexes": {}
   }
 }

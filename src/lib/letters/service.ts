@@ -259,7 +259,7 @@ export async function startCheckout(env: Env, letterId: string) {
   const now = new Date();
   await db
     .update(letter)
-    .set({ clickedAt: sql`coalesce(${letter.clickedAt}, ${now})` })
+    .set({ clickedAt: sql`coalesce(${letter.clickedAt}, ${now.getTime()})` })
     .where(eq(letter.id, row.id));
   const token = await createLinkToken(env.LINK_SIGNING_SECRET, "pay", row.id);
   const base = appUrl(env);
@@ -308,12 +308,13 @@ export async function completeCheckout(env: Env, letterId: string, paypalOrderId
   const unitPriceMinor = row.checkoutUnitMinor;
   const db = getDb(env);
   const now = new Date();
-  await db.transaction(async (tx) => {
-    await tx
+  // D1 は途中で読み書きを挟むトランザクションを持たないので、3つの書き込みを1回の batch で行う
+  await db.batch([
+    db
       .update(letter)
       .set({ status: "paid", paidAt: now, paypalCaptureId: capture.captureId, paidMinor: capture.amountMinor })
-      .where(eq(letter.id, row.id));
-    await tx.insert(purchase).values({
+      .where(eq(letter.id, row.id)),
+    db.insert(purchase).values({
       id: crypto.randomUUID(),
       userId: row.userId,
       customerId: row.customerId,
@@ -323,12 +324,12 @@ export async function completeCheckout(env: Env, letterId: string, paypalOrderId
       source: "letterpay",
       letterId: row.id,
       purchasedAt: now,
-    });
-    await tx
+    }),
+    db
       .update(product)
       .set({ stock: sql`${product.stock} - ${row.quantity}` })
-      .where(eq(product.id, row.productId));
-  });
+      .where(eq(product.id, row.productId)),
+  ]);
   // 買われたので、次のメールを決め直す
   await planFor(env, row.userId, row.customerId).catch((error) =>
     console.error("次のメールを決められませんでした:", row.customerId, error),
@@ -376,7 +377,7 @@ export async function listLetterRows(env: Env, userId: string) {
       .select({
         customerId: purchase.customerId,
         count: sql<string>`count(*)`,
-        lastAt: sql<Date>`max(${purchase.purchasedAt})`,
+        lastAt: sql<number>`max(${purchase.purchasedAt})`,
         letterpayMinor: sql<string>`coalesce(sum(case when ${purchase.source} = 'letterpay' then ${purchase.quantity} * ${purchase.unitPriceMinor} else 0 end), 0)`,
       })
       .from(purchase)

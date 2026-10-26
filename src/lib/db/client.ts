@@ -1,18 +1,10 @@
-import { connect } from "@tidbcloud/serverless";
-import { drizzle } from "drizzle-orm/tidb-serverless";
+import { drizzle } from "drizzle-orm/d1";
 
 import * as schema from "./schema";
 
-export function getDb(env: AppEnv) {
-  const client = connect({
-    url: env.DATABASE_URL,
-  });
-  return drizzle({ client, schema });
+/** Cloudflare D1 (wrangler.jsonc の d1_databases)。手元の開発では、手元の SQLite に置かれる */
+export function getDb(env: Pick<AppEnv, "DB">) {
+  return drizzle(env.DB, { schema });
 }
 
 export type Database = ReturnType<typeof getDb>;
-
-/** 検索語の % と _ は文字として扱う。 */
-export function containsPattern(value: string) {
-  return `%${value.replace(/[\\%_]/g, (char) => `\\${char}`)}%`;
-}

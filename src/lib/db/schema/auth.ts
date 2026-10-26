@@ -1,68 +1,55 @@
-import {
-  boolean,
-  datetime,
-  index,
-  mysqlTable,
-  text,
-  uniqueIndex,
-  varchar,
-} from "drizzle-orm/mysql-core";
-import { sql } from "drizzle-orm";
+import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
-const id = () => varchar("id", { length: 191 }).primaryKey();
+/** better-auth の表。日時はミリ秒の整数で持つ */
+const id = () => text("id").primaryKey();
+const timestamp = (name: string) => integer(name, { mode: "timestamp_ms" });
 const createdAt = () =>
-  datetime("createdAt", { mode: "date", fsp: 3 })
-    .default(sql`CURRENT_TIMESTAMP(3)`)
+  timestamp("createdAt")
+    .$defaultFn(() => new Date())
     .notNull();
 const updatedAt = () =>
-  datetime("updatedAt", { mode: "date", fsp: 3 })
-    .default(sql`CURRENT_TIMESTAMP(3)`)
+  timestamp("updatedAt")
+    .$defaultFn(() => new Date())
     .$onUpdate(() => new Date())
     .notNull();
 
-export const user = mysqlTable("User", {
+export const user = sqliteTable("User", {
   id: id(),
-  name: varchar("name", { length: 191 }).notNull(),
-  email: varchar("email", { length: 191 }).unique().notNull(),
-  emailVerified: boolean("emailVerified").default(false).notNull(),
+  name: text("name").notNull(),
+  email: text("email").unique().notNull(),
+  emailVerified: integer("emailVerified", { mode: "boolean" }).default(false).notNull(),
   image: text("image"),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
 
-export const session = mysqlTable(
+export const session = sqliteTable(
   "Session",
   {
     id: id(),
-    expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }).notNull(),
-    token: varchar("token", { length: 191 }).unique().notNull(),
+    expiresAt: timestamp("expiresAt").notNull(),
+    token: text("token").unique().notNull(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
     ipAddress: text("ipAddress"),
     userAgent: text("userAgent"),
-    userId: varchar("userId", { length: 191 }).notNull(),
+    userId: text("userId").notNull(),
   },
   (table) => [index("Session_userId_idx").on(table.userId)],
 );
 
-export const account = mysqlTable(
+export const account = sqliteTable(
   "Account",
   {
     id: id(),
-    accountId: varchar("accountId", { length: 191 }).notNull(),
-    providerId: varchar("providerId", { length: 191 }).notNull(),
-    userId: varchar("userId", { length: 191 }).notNull(),
+    accountId: text("accountId").notNull(),
+    providerId: text("providerId").notNull(),
+    userId: text("userId").notNull(),
     accessToken: text("accessToken"),
     refreshToken: text("refreshToken"),
     idToken: text("idToken"),
-    accessTokenExpiresAt: datetime("accessTokenExpiresAt", {
-      mode: "date",
-      fsp: 3,
-    }),
-    refreshTokenExpiresAt: datetime("refreshTokenExpiresAt", {
-      mode: "date",
-      fsp: 3,
-    }),
+    accessTokenExpiresAt: timestamp("accessTokenExpiresAt"),
+    refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt"),
     scope: text("scope"),
     password: text("password"),
     createdAt: createdAt(),
@@ -70,18 +57,15 @@ export const account = mysqlTable(
   },
   (table) => [
     index("Account_userId_idx").on(table.userId),
-    uniqueIndex("Account_provider_account_idx").on(
-      table.providerId,
-      table.accountId,
-    ),
+    uniqueIndex("Account_provider_account_idx").on(table.providerId, table.accountId),
   ],
 );
 
-export const verification = mysqlTable("Verification", {
+export const verification = sqliteTable("Verification", {
   id: id(),
-  identifier: varchar("identifier", { length: 191 }).notNull(),
+  identifier: text("identifier").notNull(),
   value: text("value").notNull(),
-  expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }).notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });

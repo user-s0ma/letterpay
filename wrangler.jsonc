@@ -16,6 +16,15 @@
     "PAYPAL_API_BASE": "https://api-m.sandbox.paypal.com",
     "ANTHROPIC_MODEL": "claude-sonnet-5-5"
   },
+  // `npx wrangler d1 create letterpay` で作った DB の ID を database_id に入れる
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "letterpay",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "drizzle"
+    }
+  ],
   "send_email": [
     {
       "name": "EMAIL"

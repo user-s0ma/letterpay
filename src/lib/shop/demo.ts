@@ -86,7 +86,7 @@ export async function loadDemoShop(env: AppEnv, owner: { id: string; email: stri
   await db
     .insert(shop)
     .values({ userId: owner.id, name: "Hoshizora Coffee", payeeEmail: owner.email, currency: "USD", shippingMinor: 1200 })
-    .onDuplicateKeyUpdate({ set: { name: "Hoshizora Coffee", currency: "USD", shippingMinor: 1200 } });
+    .onConflictDoUpdate({ target: shop.userId, set: { name: "Hoshizora Coffee", currency: "USD", shippingMinor: 1200 } });
 
   const productIds = new Map<string, string>();
   const productRows = PRODUCTS.map((item) => {
@@ -145,6 +145,12 @@ export async function loadDemoShop(env: AppEnv, owner: { id: string; email: stri
     };
   });
   await db.insert(customer).values(customers);
-  await db.insert(purchase).values(purchases);
+  // D1 は1つの文に渡せる値が100個までなので、購入は10件ずつまとめて入れる
+  const chunks = [];
+  for (let start = 0; start < purchases.length; start += 10) {
+    chunks.push(db.insert(purchase).values(purchases.slice(start, start + 10)));
+  }
+  const [first, ...rest] = chunks;
+  await db.batch([first, ...rest]);
   return customerIds;
 }

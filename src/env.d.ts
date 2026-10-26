@@ -11,12 +11,13 @@ interface AppEnv {
   LETTER_EMAIL_FROM: string;
   /** メールを送る (Cloudflare Email Service。送信元のドメインは Cloudflare で送信用に設定しておく) */
   EMAIL: SendEmail;
+  /** 店・商品・客・メールとログインの記録 (Cloudflare D1) */
+  DB: D1Database;
   /** PayPal の REST API の入口 (サンドボックスは https://api-m.sandbox.paypal.com) */
   PAYPAL_API_BASE: string;
   /** おすすめを考える Claude のモデル */
   ANTHROPIC_MODEL: string;
 
-  DATABASE_URL: string;
   BETTER_AUTH_SECRET: string;
   TURNSTILE_SECRET_KEY: string;
   PAYPAL_CLIENT_ID: string;

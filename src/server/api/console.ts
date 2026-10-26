@@ -85,7 +85,7 @@ console_.put("/shop", async (c) => {
   await getDb(c.env)
     .insert(shop)
     .values({ userId: currentUser(c).id, ...input.data })
-    .onDuplicateKeyUpdate({ set: input.data });
+    .onConflictDoUpdate({ target: shop.userId, set: input.data });
   return c.json({ ok: true });
 });
 
