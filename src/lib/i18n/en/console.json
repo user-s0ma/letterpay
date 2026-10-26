@@ -1,0 +1,109 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirmTitle": "Confirm",
+    "continue": "Continue",
+    "copied": "Copied"
+  },
+  "appShell": {
+    "nav": {
+      "letters": "Emails",
+      "products": "Products",
+      "settings": "Shop"
+    }
+  },
+  "letters": {
+    "title": "Emails",
+    "description": "For each customer, the next email the AI planned and what happened to the last one. Change the day, coffee or quantity in the table.",
+    "demo": "Load demo shop",
+    "demoLoading": "Planning with AI…",
+    "demoLoaded": "Demo shop loaded",
+    "demoPartial_one": "The AI could not plan {{count}} customer",
+    "demoPartial_other": "The AI could not plan {{count}} customers",
+    "demoConfirm": "Replace your products, customers and emails with the demo shop?",
+    "emptyTitle": "No customers yet",
+    "emptyDescription": "Load the demo shop to see the AI plan emails for seven customers.",
+    "edited": "Updated",
+    "sent": "Email sent",
+    "replanned": "The AI planned a new email",
+    "stopped": "Stopped",
+    "open": "Details",
+    "columns": {
+      "customer": "Customer",
+      "consent": "Emails",
+      "purchases": "Orders",
+      "lastPurchase": "Last order",
+      "next": "Next email",
+      "sendOn": "Send on",
+      "product": "Coffee",
+      "quantity": "Bags",
+      "decidedBy": "Decided by",
+      "reason": "Reason (written by AI)",
+      "last": "Last email",
+      "sentOn": "Sent on",
+      "result": "Result",
+      "revenue": "Paid via email"
+    },
+    "consent": {
+      "yes": "Agreed",
+      "no": "No consent",
+      "unsubscribed": "Unsubscribed"
+    },
+    "decidedBy": {
+      "ai": "AI",
+      "owner": "You"
+    },
+    "result": {
+      "sent": "Sent",
+      "clicked": "Opened link",
+      "paid": "Paid"
+    },
+    "panel": {
+      "next": "Next email",
+      "whyDay": "Why this day:",
+      "none": "Nothing planned.",
+      "sendNow": "Send now",
+      "replan": "Ask the AI again",
+      "purchases": "Orders",
+      "letters": "Emails sent",
+      "noLetters": "No emails yet."
+    }
+  },
+  "products": {
+    "title": "Products",
+    "description": "The AI only recommends active products that are in stock. Edit price, stock and notes in the table.",
+    "add": "Add product",
+    "saved": "Saved",
+    "created": "Product added",
+    "emptyTitle": "No products yet",
+    "emptyDescription": "Add a product, or load the demo shop from Emails.",
+    "columns": {
+      "name": "Name",
+      "origin": "Origin",
+      "roast": "Roast",
+      "notes": "Tasting notes",
+      "bagGrams": "Bag (g)",
+      "price": "Price",
+      "stock": "Stock",
+      "arrivedOn": "Arrived",
+      "active": "On sale"
+    },
+    "roast": {
+      "light": "Light",
+      "medium": "Medium",
+      "dark": "Dark"
+    }
+  },
+  "settings": {
+    "title": "Shop",
+    "description": "Your shop's name, the PayPal account that receives payments, currency and shipping.",
+    "name": "Shop name",
+    "payeeEmail": "PayPal account that receives payments",
+    "payeeHint": "In the sandbox, use a sandbox business account email.",
+    "currency": "Currency (ISO code, e.g. USD)",
+    "shipping": "Shipping per order",
+    "shippingHint": "Added to every order, wherever it ships.",
+    "saved": "Saved"
+  }
+}

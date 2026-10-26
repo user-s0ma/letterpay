@@ -1,0 +1,109 @@
+{
+  "common": {
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "confirmTitle": "確認",
+    "continue": "続ける",
+    "copied": "コピーしました"
+  },
+  "appShell": {
+    "nav": {
+      "letters": "メール",
+      "products": "商品",
+      "settings": "店"
+    }
+  },
+  "letters": {
+    "title": "メール",
+    "description": "客ごとに、AI が決めた次のメールと、前のメールの結果です。日・豆・量は表の中で直せます。",
+    "demo": "デモの店を読み込む",
+    "demoLoading": "AI が決めています…",
+    "demoLoaded": "デモの店を読み込みました",
+    "demoPartial_one": "{{count}}人の客のメールを AI が決められませんでした",
+    "demoPartial_other": "{{count}}人の客のメールを AI が決められませんでした",
+    "demoConfirm": "商品・客・メールを、デモの店のデータに置き換えますか？",
+    "emptyTitle": "まだ客がいません",
+    "emptyDescription": "デモの店を読み込むと、7人の客のメールを AI が決めます。",
+    "edited": "直しました",
+    "sent": "メールを送りました",
+    "replanned": "AI が次のメールを決め直しました",
+    "stopped": "送るのをやめた",
+    "open": "詳しく",
+    "columns": {
+      "customer": "客",
+      "consent": "メール",
+      "purchases": "注文",
+      "lastPurchase": "最後の注文",
+      "next": "次のメール",
+      "sendOn": "送る日",
+      "product": "豆",
+      "quantity": "袋",
+      "decidedBy": "決めた人",
+      "reason": "理由（AI が書いた文）",
+      "last": "前のメール",
+      "sentOn": "送った日",
+      "result": "結果",
+      "revenue": "メールからの売上"
+    },
+    "consent": {
+      "yes": "同意あり",
+      "no": "同意なし",
+      "unsubscribed": "配信停止"
+    },
+    "decidedBy": {
+      "ai": "AI",
+      "owner": "あなた"
+    },
+    "result": {
+      "sent": "送った",
+      "clicked": "リンクを開いた",
+      "paid": "払った"
+    },
+    "panel": {
+      "next": "次のメール",
+      "whyDay": "この日にした理由：",
+      "none": "予定はありません。",
+      "sendNow": "今すぐ送る",
+      "replan": "AI に決め直させる",
+      "purchases": "注文",
+      "letters": "送ったメール",
+      "noLetters": "まだ送っていません。"
+    }
+  },
+  "products": {
+    "title": "商品",
+    "description": "AI は、販売中で在庫のある商品だけをすすめます。価格・在庫・味の特徴は表の中で直せます。",
+    "add": "商品を足す",
+    "saved": "保存しました",
+    "created": "商品を足しました",
+    "emptyTitle": "まだ商品がありません",
+    "emptyDescription": "商品を足すか、メールの画面でデモの店を読み込んでください。",
+    "columns": {
+      "name": "名前",
+      "origin": "産地",
+      "roast": "焙煎",
+      "notes": "味の特徴",
+      "bagGrams": "1袋 (g)",
+      "price": "価格",
+      "stock": "在庫",
+      "arrivedOn": "入荷日",
+      "active": "販売中"
+    },
+    "roast": {
+      "light": "浅煎り",
+      "medium": "中煎り",
+      "dark": "深煎り"
+    }
+  },
+  "settings": {
+    "title": "店",
+    "description": "店の名前、代金を受け取る PayPal のアカウント、通貨、送料。",
+    "name": "店の名前",
+    "payeeEmail": "代金を受け取る PayPal のアカウント",
+    "payeeHint": "サンドボックスでは、サンドボックスのビジネスアカウントのメールアドレスを入れます。",
+    "currency": "通貨（ISO のコード。例：USD）",
+    "shipping": "1回の注文の送料",
+    "shippingHint": "送り先の国によらず、どの注文にも足します。",
+    "saved": "保存しました"
+  }
+}

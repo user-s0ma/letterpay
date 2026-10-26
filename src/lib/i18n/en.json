@@ -1,0 +1,158 @@
+{
+  "site": {
+    "footer": {
+      "supportHeading": "Legal",
+      "tagline": "Recommendation emails your customers can pay from.",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    },
+    "login": "Log in",
+    "name": "Letterpay",
+    "metaTitle": "Letterpay | Recommendation emails paid with PayPal",
+    "metaDescription": "AI reads each customer's purchase history and emails the right product at the right time, with the reason. The link opens PayPal checkout directly.",
+    "imageAlt": "Letterpay: recommendation emails paid with PayPal"
+  },
+  "common": {
+    "save": "Save",
+    "delete": "Delete",
+    "create": "Create",
+    "edit": "Edit",
+    "close": "Close",
+    "loading": "Loading...",
+    "copy": "Copy",
+    "name": "Name",
+    "email": "Email",
+    "status": "Status",
+    "settings": "Settings",
+    "all": "All",
+    "apiError": "The request failed",
+    "openMenu": "Open menu",
+    "yes": "Yes",
+    "no": "No",
+    "creating": "Creating...",
+    "saving": "Saving...",
+    "sending": "Sending…",
+    "logout": "Log out",
+    "previous": "Previous",
+    "next": "Next",
+    "processing": "Processing...",
+    "duration": {
+      "hoursMinutes": "{{hours}}h {{minutes}}m",
+      "minutesSeconds": "{{minutes}}m {{seconds}}s",
+      "seconds": "{{seconds}}s"
+    },
+    "refresh": "Refresh"
+  },
+  "appShell": {
+    "closeMenu": "Close menu",
+    "profile": "Profile",
+    "profileModal": {
+      "emailHint": "Email address cannot be changed",
+      "language": "Language",
+      "updateFailed": "Failed to update profile",
+      "signingOut": "Logging out...",
+      "signOutFailed": "Failed to log out"
+    }
+  },
+  "auth": {
+    "backToLogin": "Back to log in",
+    "captchaFailed": "Security check failed. Please try again",
+    "captchaPreparing": "The security check is still loading. Please try again in a moment",
+    "forgotPassword": {
+      "checkEmailTitle": "Check your email",
+      "description": "We'll send a reset link to your registered email address.",
+      "emailPlaceholder": "name@company.com",
+      "sendButton": "Send reset email",
+      "sendError": "Could not send the password reset email",
+      "sentDescription": "We sent a password reset link to {{email}}.",
+      "title": "Reset your password",
+      "useDifferentEmail": "Use a different email address"
+    },
+    "login": {
+      "createAccount": "Create an account",
+      "emailNotVerified": "Please verify your email address",
+      "emailPlaceholder": "name@company.com",
+      "forgotPasswordLink": "Forgot your password?",
+      "invalidCredentials": "Please check your email address and password",
+      "loginError": "Could not complete sign-in",
+      "continueWithGoogle": "Continue with Google",
+      "loginTab": "Log in",
+      "nameLabel": "Name",
+      "namePlaceholder": "Jane Smith",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "resendError": "Could not resend the verification email",
+      "resendVerification": "Resend verification email",
+      "resending": "Resending...",
+      "signupError": "Could not create your account",
+      "signupTab": "Sign up",
+      "verificationEmailDescription": "Open the link sent to {{email}} to complete your registration.",
+      "verificationEmailSent": "Verification email sent",
+      "heroTitleLine1": "Many AI models,",
+      "heroTitleLine2": "one API.",
+      "heroDescription": "From open models to ones published by individuals. One API key; switch models by changing model."
+    },
+    "processing": "Processing...",
+    "resetPassword": {
+      "completeDescription": "Log in with your new password.",
+      "completeTitle": "Password reset complete",
+      "confirmPasswordLabel": "Confirm new password",
+      "confirmPasswordPlaceholder": "Re-enter your password",
+      "description": "Enter a new password with at least 8 characters.",
+      "goToLogin": "Go to log in",
+      "invalidLinkDescription": "The reset link is invalid or has expired. Please request a new email.",
+      "invalidLinkTitle": "This link can't be used",
+      "invalidTokenError": "This link is invalid or has expired",
+      "newPasswordLabel": "New password",
+      "passwordMismatch": "Passwords do not match",
+      "passwordPlaceholder": "At least 8 characters",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "requestNewLink": "Send reset email",
+      "resetError": "Could not reset your password",
+      "submitButton": "Reset password",
+      "title": "Set a new password",
+      "updating": "Updating..."
+    }
+  },
+  "email": {
+    "reset": {
+      "body": "Use the button below to set a new password.",
+      "button": "Reset password",
+      "footer": "This link expires in 1 hour. If you did not request this, you can safely discard this email.",
+      "heading": "Reset your password",
+      "subject": "Forkline password reset"
+    },
+    "verify": {
+      "body": "To complete your registration, verify your email address using the button below.",
+      "button": "Verify email address",
+      "footer": "This link expires in 1 hour. If you did not request this, you can safely discard this email.",
+      "heading": "Verify your email address",
+      "subject": "Forkline email address verification"
+    }
+  },
+  "server": {
+    "common": {
+      "internalError": "An error occurred while processing the API request.",
+      "loginRequired": "Please sign in.",
+      "notFound": "API not found."
+    }
+  },
+  "account": {
+    "title": "Account",
+    "saved": "Saved",
+    "deleteTitle": "Delete account",
+    "deleteNeedsSignIn": "For your security, sign in again before deleting your account",
+    "nameHint": "Shown to you in the console. Customers see the shop name, not this.",
+    "deleteDescription": "Delete your account. Your published models are unpublished and your API keys stop working. You will no longer be able to sign in. This cannot be undone.",
+    "deleteConfirmPrompt": "To confirm, type your email address",
+    "deleteButton": "Delete account",
+    "deleteFailed": "Could not delete your account",
+    "deleted": "Your account has been deleted"
+  },
+  "theme": {
+    "label": "Theme",
+    "system": "Match device",
+    "dark": "Dark",
+    "light": "Light"
+  }
+}
