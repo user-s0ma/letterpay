@@ -75,7 +75,6 @@
       "forgotPasswordLink": "パスワードをお忘れですか？",
       "invalidCredentials": "メールアドレスまたはパスワードを確認してください",
       "loginError": "ログイン処理を完了できませんでした",
-      "continueWithGoogle": "Google で続ける",
       "loginTab": "ログイン",
       "nameLabel": "お名前",
       "namePlaceholder": "山田 太郎",

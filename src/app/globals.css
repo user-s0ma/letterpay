@@ -477,17 +477,3 @@ html [data-sonner-toaster][data-sonner-theme] [data-description] {
   color: inherit;
 }
 
-/*
- * Google のログインボタン。色は Google のブランドガイドラインの指定値 (暗/明) をそのまま使う。
- * https://developers.google.com/identity/branding-guidelines
- */
-.google-button {
-  border: 1px solid #8e918f;
-  background: #131314;
-  color: #e3e3e3;
-}
-:root[data-theme="light"] .google-button {
-  border-color: #747775;
-  background: #ffffff;
-  color: #1f1f1f;
-}

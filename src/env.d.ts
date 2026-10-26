@@ -18,8 +18,6 @@ interface AppEnv {
 
   DATABASE_URL: string;
   BETTER_AUTH_SECRET: string;
-  GOOGLE_OAUTH_CLIENT_ID: string;
-  GOOGLE_OAUTH_CLIENT_SECRET: string;
   TURNSTILE_SECRET_KEY: string;
   PAYPAL_CLIENT_ID: string;
   PAYPAL_CLIENT_SECRET: string;

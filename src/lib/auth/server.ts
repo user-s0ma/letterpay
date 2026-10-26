@@ -128,13 +128,6 @@ function createAuth(env: AppEnv, requestOrigin?: string) {
         });
       },
     },
-    socialProviders: {
-      google: {
-        clientId: env.GOOGLE_OAUTH_CLIENT_ID,
-        clientSecret: env.GOOGLE_OAUTH_CLIENT_SECRET,
-        prompt: "select_account",
-      },
-    },
     user: {
       deleteUser: {
         enabled: true,

@@ -39,7 +39,7 @@ const SECTIONS_JA: LegalSection[] = [
   {
     heading: "2. アカウント",
     paragraphs: [
-      "アカウントは、メールアドレスとパスワード、または Google アカウントでの登録により作成されます。1つのアカウントが1つの店を持ちます。アカウントは個人に帰属し、第三者への譲渡・貸与・共有はできません。",
+      "アカウントは、メールアドレスとパスワードの登録により作成されます。1つのアカウントが1つの店を持ちます。アカウントは個人に帰属し、第三者への譲渡・貸与・共有はできません。",
     ],
   },
   {
@@ -116,7 +116,7 @@ const SECTIONS_EN: LegalSection[] = [
   {
     heading: "2. Accounts",
     paragraphs: [
-      "Accounts are created with an email address and password or with a Google account. One account has one Shop. An account belongs to an individual and may not be transferred, lent or shared.",
+      "Accounts are created with an email address and password. One account has one Shop. An account belongs to an individual and may not be transferred, lent or shared.",
     ],
   },
   {

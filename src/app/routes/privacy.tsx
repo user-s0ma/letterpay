@@ -32,7 +32,7 @@ const SECTIONS_JA: LegalSection[] = [
   {
     heading: "1. 扱う情報",
     items: [
-      { label: "店のアカウントの情報:", text: "氏名、メールアドレス、パスワードのハッシュ値（メールアドレスで登録した場合）、Google ログイン時に Google から提供されるプロフィール情報。" },
+      { label: "店のアカウントの情報:", text: "氏名、メールアドレス、パスワードのハッシュ値。" },
       { label: "店の情報:", text: "店の名前、代金を受け取る PayPal アカウントのメールアドレス、通貨、送料、商品の情報。" },
       { label: "客の情報:", text: "店が登録した氏名、メールアドレス、国、広告メールへの同意の日時、購入の履歴。" },
       { label: "メールと支払いの記録:", text: "送ったメールの内容（すすめた商品と理由）、送った日時、リンクを開いた日時、PayPal の注文と支払いの ID、支払われた額。送り先の住所やカード情報は PayPal が扱い、本サービスは受け取りません。" },
@@ -53,7 +53,7 @@ const SECTIONS_JA: LegalSection[] = [
   {
     heading: "4. 第三者への提供・業務委託",
     paragraphs: [
-      "法令に基づく場合を除き、本人の同意なく第三者に提供しません。ただし、本サービスの提供に必要な範囲で、次の事業者に取り扱いを委託します：Cloudflare（ホスティング、メール配信）、PingCAP（TiDB Cloud、データベース）、Anthropic（AI）、PayPal（決済）、Google（ログイン）。",
+      "法令に基づく場合を除き、本人の同意なく第三者に提供しません。ただし、本サービスの提供に必要な範囲で、次の事業者に取り扱いを委託します：Cloudflare（ホスティング、メール配信）、PingCAP（TiDB Cloud、データベース）、Anthropic（AI）、PayPal（決済）。",
     ],
   },
   {
@@ -88,7 +88,7 @@ const SECTIONS_EN: LegalSection[] = [
   {
     heading: "1. Information we handle",
     items: [
-      { label: "Shop account information:", text: "Name, email address, a hash of the password (if registered with email), and the profile information Google provides when signing in with Google." },
+      { label: "Shop account information:", text: "Name, email address and a hash of the password." },
       { label: "Shop information:", text: "Shop name, the email of the PayPal account that receives payments, currency, shipping fee and product information." },
       { label: "Customer information:", text: "Name, email address, country, the date of consent to marketing emails, and purchase history, as registered by the shop." },
       { label: "Email and payment records:", text: "The content of emails sent (the suggested product and reason), when they were sent and when the link was opened, PayPal order and payment IDs, and the amount paid. Shipping addresses and card details are handled by PayPal; the Service does not receive them." },
@@ -107,7 +107,7 @@ const SECTIONS_EN: LegalSection[] = [
   {
     heading: "4. Disclosure and service providers",
     paragraphs: [
-      "We do not give personal information to third parties without consent, except as required by law. To provide the Service, we use these providers: Cloudflare (hosting, email delivery), PingCAP (TiDB Cloud, database), Anthropic (AI), PayPal (payments) and Google (sign-in).",
+      "We do not give personal information to third parties without consent, except as required by law. To provide the Service, we use these providers: Cloudflare (hosting, email delivery), PingCAP (TiDB Cloud, database), Anthropic (AI) and PayPal (payments).",
     ],
   },
   {
