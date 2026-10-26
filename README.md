@@ -36,7 +36,7 @@ npm install
 cp .env.example .env            # public values for the pages
 cp .dev.vars.example .dev.vars  # secrets; fill them in
 npm run db:migrate:local        # create the tables in the local D1
-npm run dev                     # http://localhost:5173
+npm run dev                     # http://localhost:5180
 ```
 
 Set `AUTH_EMAIL_FROM` and `LETTER_EMAIL_FROM` in `wrangler.jsonc` to addresses on your sending domain. Sign up, open the console and press **Load demo shop**. The demo customers' addresses are your own address with `+name` added, so the emails arrive in your inbox. In **Shop**, set the PayPal account that receives payments to a sandbox business account, and pay with a sandbox personal account.

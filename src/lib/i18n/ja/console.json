@@ -31,7 +31,7 @@
     "open": "詳しく",
     "columns": {
       "customer": "客",
-      "consent": "メール",
+      "consent": "同意",
       "purchases": "注文",
       "lastPurchase": "最後の注文",
       "next": "次のメール",

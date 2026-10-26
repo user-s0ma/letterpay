@@ -54,7 +54,7 @@ For one customer you get their purchase history, the emails already sent and wha
 - when the next email should arrive: around when they are likely to run out, judging from how much they buy and how often. If they ignored recent emails, wait longer or decide to stop.
 - which coffee: their usual one, or a new one that fits what they have liked. Only recommend products that are in stock.
 - how many bags: the same number they usually buy.
-- the reason, written to the customer in a warm, plain voice. Refer to their actual history. No invented facts about the coffee beyond the product notes. No discount offers.
+- the reason, written to the customer in a warm, plain voice. Refer to their actual history. No invented facts about the coffee beyond the product notes. Do not promise anything the shop has not offered: no reserved or set-aside bags, no roast or delivery dates, no discounts.
 
 Never schedule an email on or before today.`;
 

@@ -31,7 +31,7 @@
     "open": "Details",
     "columns": {
       "customer": "Customer",
-      "consent": "Emails",
+      "consent": "Consent",
       "purchases": "Orders",
       "lastPurchase": "Last order",
       "next": "Next email",

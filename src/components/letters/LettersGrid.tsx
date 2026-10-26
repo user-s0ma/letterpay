@@ -154,10 +154,9 @@ export function LettersGrid({ rows, products, formatMoney, onEdit, onOpen }: Pro
             colId: "reason",
             minWidth: 320,
             flex: 1,
-            wrapText: true,
-            autoHeight: true,
-            cellClass: "leading-5 py-2",
+            // 全文はツールチップと「詳しく」で見せ、表の行は1行に保つ
             valueGetter: (params) => params.data?.planned?.reason ?? params.data?.stoppedReason ?? null,
+            tooltipValueGetter: (params) => params.value,
           },
         ],
       },
@@ -199,6 +198,9 @@ export function LettersGrid({ rows, products, formatMoney, onEdit, onOpen }: Pro
         columnDefs={columns}
         getRowId={(params) => params.data.customerId}
         defaultColDef={{ sortable: true, filter: true, resizable: true }}
+        // 客の名前と国の2行が収まる高さ
+        rowHeight={52}
+        tooltipShowDelay={300}
         singleClickEdit
         stopEditingWhenCellsLoseFocus
         onCellValueChanged={onCellValueChanged}

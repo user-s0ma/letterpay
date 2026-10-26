@@ -119,14 +119,14 @@
       "button": "Reset password",
       "footer": "This link expires in 1 hour. If you did not request this, you can safely discard this email.",
       "heading": "Reset your password",
-      "subject": "Forkline password reset"
+      "subject": "Letterpay password reset"
     },
     "verify": {
       "body": "To complete your registration, verify your email address using the button below.",
       "button": "Verify email address",
       "footer": "This link expires in 1 hour. If you did not request this, you can safely discard this email.",
       "heading": "Verify your email address",
-      "subject": "Forkline email address verification"
+      "subject": "Letterpay email address verification"
     }
   },
   "server": {
