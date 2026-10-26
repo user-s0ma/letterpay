@@ -10,9 +10,7 @@
       "publish": "Console"
     },
     "footer": {
-      "tagline": "Recommendation emails your customers can pay from.",
-      "product": "Product",
-      "console": "Open the console"
+      "tagline": "Recommendation emails your customers can pay from."
     },
     "og": {
       "subtitle": "AI picks the coffee and the day. PayPal takes the payment."
@@ -27,11 +25,9 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "For small shops that sell abroad",
       "title": "The email is the checkout.",
       "lead": "Letterpay reads each customer's purchase history, writes to them when they are about to run out, and explains why this coffee. One tap on the email opens PayPal, with their saved address. No store page in between.",
-      "cta": "Open the console",
-      "secondary": "How it works"
+      "cta": "Open the console"
     },
     "steps": {
       "title": "How it works",

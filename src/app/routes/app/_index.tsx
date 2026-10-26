@@ -108,9 +108,7 @@ export default function LettersPage() {
         {letters.isPending ? (
           <div className="h-96 animate-pulse rounded-(--radius-panel) bg-paper" />
         ) : rows.length === 0 ? (
-          <section className="console-panel">
-            <EmptyState icon={Mail} title={t("letters.emptyTitle")} description={t("letters.emptyDescription")} />
-          </section>
+          <EmptyState icon={Mail} title={t("letters.emptyTitle")} description={t("letters.emptyDescription")} />
         ) : (
           <LettersGrid
             rows={rows}
@@ -159,8 +157,9 @@ function CustomerPanel({
   const planned = row.planned;
 
   return (
-    <Modal title={row.name} eyebrow={row.email} size="3xl" onClose={onClose}>
+    <Modal title={row.name} size="3xl" onClose={onClose}>
       <div className="space-y-6">
+        <p className="text-sm text-ink-mute">{row.email}</p>
         <section>
           <h3 className="text-sm font-semibold">{t("letters.panel.next")}</h3>
           {planned ? (
@@ -174,9 +173,7 @@ function CustomerPanel({
               <p className="text-ink-mute">
                 <span className="font-medium text-ink-soft">{t("letters.panel.whyDay")}</span> {planned.timingReason}
               </p>
-              <blockquote className="rounded-(--radius-control) border border-line bg-paper px-4 py-3">
-                {planned.reason}
-              </blockquote>
+              <p>{planned.reason}</p>
             </div>
           ) : (
             <p className="mt-2 text-sm text-ink-mute">

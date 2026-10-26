@@ -47,7 +47,6 @@
     "closeMenu": "Close menu",
     "profile": "Profile",
     "profileModal": {
-      "emailHint": "Email address cannot be changed",
       "language": "Language",
       "updateFailed": "Failed to update profile",
       "signingOut": "Logging out...",
@@ -86,10 +85,7 @@
       "signupError": "Could not create your account",
       "signupTab": "Sign up",
       "verificationEmailDescription": "Open the link sent to {{email}} to complete your registration.",
-      "verificationEmailSent": "Verification email sent",
-      "heroTitleLine1": "Many AI models,",
-      "heroTitleLine2": "one API.",
-      "heroDescription": "From open models to ones published by individuals. One API key; switch models by changing model."
+      "verificationEmailSent": "Verification email sent"
     },
     "processing": "Processing...",
     "resetPassword": {
@@ -142,7 +138,7 @@
     "deleteTitle": "Delete account",
     "deleteNeedsSignIn": "For your security, sign in again before deleting your account",
     "nameHint": "Shown to you in the console. Customers see the shop name, not this.",
-    "deleteDescription": "Delete your account. Your published models are unpublished and your API keys stop working. You will no longer be able to sign in. This cannot be undone.",
+    "deleteDescription": "Planned emails are canceled and your customers get no more emails. You will no longer be able to sign in. This cannot be undone.",
     "deleteConfirmPrompt": "To confirm, type your email address",
     "deleteButton": "Delete account",
     "deleteFailed": "Could not delete your account",

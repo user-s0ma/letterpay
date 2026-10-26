@@ -14,7 +14,7 @@ export default function SettingsPage() {
   const shop = useQuery({ queryKey: ["shop"], queryFn: getShop });
   return (
     <>
-      <PageHeader title={t("settings.title")} description={t("settings.description")} onOpenMenu={openMobileNavigation} />
+      <PageHeader title={t("settings.title")} onOpenMenu={openMobileNavigation} />
       <PageBody>
         {shop.isPending ? (
           <div className="h-80 max-w-2xl animate-pulse rounded-(--radius-panel) bg-paper" />

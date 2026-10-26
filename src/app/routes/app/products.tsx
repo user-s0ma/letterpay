@@ -113,9 +113,7 @@ export default function ProductsPage() {
         {products.isPending ? (
           <div className="h-96 animate-pulse rounded-(--radius-panel) bg-paper" />
         ) : rows.length === 0 ? (
-          <section className="console-panel">
-            <EmptyState icon={Coffee} title={t("products.emptyTitle")} description={t("products.emptyDescription")} />
-          </section>
+          <EmptyState icon={Coffee} title={t("products.emptyTitle")} description={t("products.emptyDescription")} />
         ) : (
           <div className="h-[calc(100dvh-14rem)] min-h-[420px] w-full">
             <AgGridReact<ProductRecord>

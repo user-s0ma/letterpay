@@ -9,7 +9,6 @@ const SIZE_CLASSES = {
 
 type ModalProps = {
   title: React.ReactNode;
-  eyebrow?: React.ReactNode;
   size?: keyof typeof SIZE_CLASSES;
   onClose: () => void;
   children: React.ReactNode;
@@ -17,7 +16,6 @@ type ModalProps = {
 
 export function Modal({
   title,
-  eyebrow,
   size = "md",
   onClose,
   children,
@@ -49,10 +47,9 @@ export function Modal({
       >
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <div className="min-w-0">
-            {eyebrow && <p className="text-xs text-ink-mute">{eyebrow}</p>}
             <h2
               id={titleId}
-              className={`truncate text-base font-semibold text-ink ${eyebrow ? "mt-1" : ""}`}
+              className="truncate text-base font-semibold text-ink"
             >
               {title}
             </h2>

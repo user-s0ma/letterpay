@@ -13,10 +13,6 @@ const FOOTER_COLUMNS: Array<{
   links: Array<[labelKey: string, href: string]>;
 }> = [
   {
-    h: "site.footer.product",
-    links: [["site.footer.console", "/app"]],
-  },
-  {
     h: "site.footer.supportHeading",
     links: [
       ["site.footer.terms", "/terms"],
@@ -64,7 +60,7 @@ export function SiteHeader({
         <a href={localizeHref("/", locale)} aria-label="Letterpay">
           <Logo />
         </a>
-        <div className="hidden items-center gap-1 rounded-full border border-line bg-paper/70 p-1 md:flex">
+        <div className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map(([labelKey, href]) => (
             <a
               key={href}
@@ -141,7 +137,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-line">
       <div className="ui-container py-16">
-        <div className="grid gap-10 md:grid-cols-[1.6fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-[1.6fr_1fr]">
           <div>
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-mute">

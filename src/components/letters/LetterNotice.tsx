@@ -17,9 +17,9 @@ export function LetterNotice({
     <main className="flex min-h-dvh items-center justify-center bg-paper px-4 py-12 font-sans text-ink">
       <div className="w-full max-w-md">
         {shopName && (
-          <p className="mb-4 text-center text-xs font-semibold tracking-[0.12em] text-ink-mute uppercase">{shopName}</p>
+          <p className="mb-4 text-center text-sm text-ink-mute">{shopName}</p>
         )}
-        <div className="rounded-(--radius-panel) border border-line bg-surface px-6 py-8 text-center shadow-sm">
+        <div className="text-center">
           <h1 className="text-xl font-semibold tracking-[-0.01em]">{title}</h1>
           {children && <div className="mt-3 text-sm leading-6 text-ink-soft">{children}</div>}
         </div>

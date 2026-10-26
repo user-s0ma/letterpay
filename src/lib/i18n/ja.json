@@ -47,7 +47,6 @@
     "closeMenu": "メニューを閉じる",
     "profile": "プロフィール",
     "profileModal": {
-      "emailHint": "メールアドレスは変更できません",
       "language": "言語",
       "updateFailed": "プロフィールを更新できませんでした",
       "signingOut": "ログアウト中...",
@@ -86,10 +85,7 @@
       "signupError": "アカウントを作成できませんでした",
       "signupTab": "新規登録",
       "verificationEmailDescription": "{{email}} に届いたリンクを開いて、登録を完了してください。",
-      "verificationEmailSent": "確認メールを送信しました",
-      "heroTitleLine1": "いろいろなAIモデルを、",
-      "heroTitleLine2": "ひとつのAPIで。",
-      "heroDescription": "オープンモデルから個人が公開したモデルまで。APIキー1つで、model を変えるだけで呼び分けられます。"
+      "verificationEmailSent": "確認メールを送信しました"
     },
     "processing": "処理中…",
     "resetPassword": {
@@ -142,7 +138,7 @@
     "deleteTitle": "アカウントを削除",
     "deleteNeedsSignIn": "安全のため、ログインし直してから削除してください",
     "nameHint": "コンソールでだけ表示されます。客には店の名前が表示されます。",
-    "deleteDescription": "アカウントを削除します。公開中のモデルは非公開になり、API キーは使えなくなります。ログインできなくなります。取り消せません。",
+    "deleteDescription": "予定のメールは止まり、客にはもう届きません。ログインもできなくなります。元に戻せません。",
     "deleteConfirmPrompt": "確認のため、メールアドレスを入力してください",
     "deleteButton": "アカウントを削除",
     "deleteFailed": "アカウントを削除できませんでした",

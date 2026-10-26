@@ -194,7 +194,7 @@ export default function Login() {
         />
         <div className="ui-container relative grid min-h-dvh items-center gap-10 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:py-16">
           <section className="text-ink">
-            <h1 className="mt-6 text-4xl leading-[1.04] font-semibold tracking-[-0.045em] sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl leading-[1.04] font-semibold tracking-[-0.045em] sm:text-5xl lg:text-6xl">
               {t("auth.login.heroTitleLine1")}
               <br />
               {t("auth.login.heroTitleLine2")}
@@ -203,7 +203,7 @@ export default function Login() {
               {t("auth.login.heroDescription")}
             </p>
           </section>
-          <section className="ui-card p-2">
+          <section className="ui-card p-6">
             <div className="ui-tabs">
               <button
                 className="ui-tab"
@@ -222,81 +222,79 @@ export default function Login() {
                 {t("auth.login.signupTab")}
               </button>
             </div>
-            <div className="p-6 mt-2 rounded-xl bg-paper">
-              <form className="grid gap-5" onSubmit={handleSubmit}>
-                {verificationEmail && (
-                  <div className="rounded-xl border border-line bg-brand-tint p-4 text-sm">
-                    <p className="font-semibold text-ink">
-                      {t("auth.login.verificationEmailSent")}
-                    </p>
-                    <p className="mt-1 break-all leading-6 text-ink-mute">
-                      {t("auth.login.verificationEmailDescription", {
-                        email: verificationEmail,
-                      })}
-                    </p>
-                    <button
-                      className="mt-2 font-semibold text-brand-ink hover:underline disabled:cursor-wait disabled:opacity-50"
-                      type="button"
-                      disabled={isResending}
-                      onClick={() => void resendVerificationEmail()}
+            <form className="mt-6 grid gap-5" onSubmit={handleSubmit}>
+              {verificationEmail && (
+                <div className="text-sm">
+                  <p className="font-semibold text-ink">
+                    {t("auth.login.verificationEmailSent")}
+                  </p>
+                  <p className="mt-1 break-all leading-6 text-ink-mute">
+                    {t("auth.login.verificationEmailDescription", {
+                      email: verificationEmail,
+                    })}
+                  </p>
+                  <button
+                    className="mt-2 font-semibold text-brand-ink hover:underline disabled:cursor-wait disabled:opacity-50"
+                    type="button"
+                    disabled={isResending}
+                    onClick={() => void resendVerificationEmail()}
+                  >
+                    {isResending
+                      ? t("auth.login.resending")
+                      : t("auth.login.resendVerification")}
+                  </button>
+                </div>
+              )}
+              {mode === "signup" && (
+                <Field
+                  label={t("auth.login.nameLabel")}
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  placeholder={t("auth.login.namePlaceholder")}
+                />
+              )}
+              <Field
+                label={t("common.email")}
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder={t("auth.login.emailPlaceholder")}
+              />
+              <Field
+                label={t("auth.login.passwordLabel")}
+                labelAccessory={
+                  mode === "login" ? (
+                    <Link
+                      className="font-semibold text-brand-ink hover:underline"
+                      to={`/forgot-password?callbackUrl=${encodeURIComponent(callbackUrl)}`}
                     >
-                      {isResending
-                        ? t("auth.login.resending")
-                        : t("auth.login.resendVerification")}
-                    </button>
-                  </div>
-                )}
-                {mode === "signup" && (
-                  <Field
-                    label={t("auth.login.nameLabel")}
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    placeholder={t("auth.login.namePlaceholder")}
-                  />
-                )}
-                <Field
-                  label={t("common.email")}
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder={t("auth.login.emailPlaceholder")}
-                />
-                <Field
-                  label={t("auth.login.passwordLabel")}
-                  labelAccessory={
-                    mode === "login" ? (
-                      <Link
-                        className="font-semibold text-brand-ink hover:underline"
-                        to={`/forgot-password?callbackUrl=${encodeURIComponent(callbackUrl)}`}
-                      >
-                        {t("auth.login.forgotPasswordLink")}
-                      </Link>
-                    ) : undefined
-                  }
-                  name="password"
-                  type="password"
-                  autoComplete={
-                    mode === "login" ? "current-password" : "new-password"
-                  }
-                  placeholder={t("auth.login.passwordPlaceholder")}
-                />
+                      {t("auth.login.forgotPasswordLink")}
+                    </Link>
+                  ) : undefined
+                }
+                name="password"
+                type="password"
+                autoComplete={
+                  mode === "login" ? "current-password" : "new-password"
+                }
+                placeholder={t("auth.login.passwordPlaceholder")}
+              />
 
-                <button
-                  className="ui-button-primary mt-1 w-full"
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  {isLoading
-                    ? t("auth.processing")
-                    : mode === "login"
-                      ? t("auth.login.loginTab")
-                      : t("auth.login.createAccount")}
-                  <ArrowRight className="h-4 w-4 transition-transform" />
-                </button>
-                {captchaWidget}
-              </form>
-            </div>
+              <button
+                className="ui-button-primary mt-1 w-full"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading
+                  ? t("auth.processing")
+                  : mode === "login"
+                    ? t("auth.login.loginTab")
+                    : t("auth.login.createAccount")}
+                <ArrowRight className="h-4 w-4 transition-transform" />
+              </button>
+              {captchaWidget}
+            </form>
           </section>
         </div>
       </main>

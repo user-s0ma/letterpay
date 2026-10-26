@@ -34,14 +34,13 @@ export default function Unsubscribe({ loaderData, actionData }: Route.ComponentP
   if (result.done) {
     return (
       <LetterNotice shopName={result.shopName} title="You are unsubscribed">
-        You will not get any more recommendation emails from {result.shopName}.
+        You will not get any more recommendation emails.
       </LetterNotice>
     );
   }
   return (
     <LetterNotice shopName={result.shopName} title="Stop these emails?">
-      <p>You will not get any more coffee recommendations from {result.shopName}.</p>
-      <Form method="post" className="mt-5">
+      <Form method="post" className="mt-2">
         <button className="console-button-primary" type="submit">
           Unsubscribe
         </button>

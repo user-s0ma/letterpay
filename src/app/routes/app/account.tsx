@@ -8,20 +8,6 @@ import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { authClient } from "@/lib/auth/client";
 import type { AppLayoutContext } from "./_layout";
 
-function SectionHeader({ title, danger }: { title: string; danger?: boolean }) {
-  return (
-    <div
-      className={`border-b border-line p-4 rounded-t-xl ${
-        danger ? "bg-danger-tint" : "bg-paper"
-      }`}
-    >
-      <h2 className={`text-sm font-semibold ${danger ? "text-danger" : ""}`}>
-        {title}
-      </h2>
-    </div>
-  );
-}
-
 export default function AccountPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -116,9 +102,9 @@ export default function AccountPage() {
       </header>
       <main className="w-full">
         <div className="mx-auto max-w-2xl space-y-4 px-4 py-6">
-          <section className="console-panel overflow-hidden">
-            <SectionHeader title={t("appShell.profile")} />
-            <form className="space-y-4 p-5" onSubmit={handleSave}>
+          <section className="console-panel p-5">
+            <h2 className="text-sm font-semibold">{t("appShell.profile")}</h2>
+            <form className="mt-4 space-y-4" onSubmit={handleSave}>
               <label className="block">
                 <span className="mb-1 block text-xs text-ink">
                   {t("common.name")}
@@ -142,9 +128,6 @@ export default function AccountPage() {
                   value={user.email}
                   disabled
                 />
-                <span className="mt-1.5 block text-xs leading-5 text-ink-mute">
-                  {t("appShell.profileModal.emailHint")}
-                </span>
               </label>
               <div>
                 <span className="mb-1 block text-xs text-ink">
@@ -165,7 +148,7 @@ export default function AccountPage() {
           </section>
 
           <button
-            className="console-panel flex w-full items-center justify-center gap-2 px-3 py-3 text-sm text-danger transition-colors hover:bg-danger-tint disabled:cursor-wait disabled:opacity-50"
+            className="console-button-secondary"
             type="button"
             onClick={handleSignOut}
             disabled={busy}
@@ -176,9 +159,11 @@ export default function AccountPage() {
               : t("common.logout")}
           </button>
 
-          <section id="delete" className="console-panel overflow-hidden">
-            <SectionHeader title={t("account.deleteTitle")} danger />
-            <form className="space-y-4 p-5" onSubmit={handleDelete}>
+          <section id="delete" className="console-panel p-5">
+            <h2 className="text-sm font-semibold text-danger">
+              {t("account.deleteTitle")}
+            </h2>
+            <form className="mt-4 space-y-4" onSubmit={handleDelete}>
               <p className="text-sm leading-6 text-ink">
                 {t("account.deleteDescription")}
               </p>

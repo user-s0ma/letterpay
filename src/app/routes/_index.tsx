@@ -14,8 +14,7 @@ const GUARDS = [
 function SampleEmail() {
   return (
     <div className="mx-auto w-full max-w-md rounded-[1.25rem] border border-line bg-raised p-6 shadow-xl shadow-black/10">
-      <p className="text-[11px] font-semibold tracking-[0.14em] text-ink-mute uppercase">Hoshizora Coffee</p>
-      <p className="mt-4 font-serif text-[15px]">Hi Mia,</p>
+      <p className="font-serif text-[15px]">Hi Mia,</p>
       <p className="mt-2 font-serif text-[15px] leading-7 text-ink-soft">
         Your last two bags of Brazil Cerrado should be running low around now. It has been your steady pick since spring,
         so here is the same again, roasted this week.
@@ -42,19 +41,13 @@ export default function Home() {
 
       <section className="ui-container grid gap-14 pt-12 pb-20 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16 lg:py-24">
         <div className="max-w-[38rem]">
-          <p className="text-sm font-semibold text-brand-ink">{t("landing.hero.eyebrow")}</p>
-          <h1 className="h-display mt-4 text-[clamp(2.2rem,4.6vw,3.8rem)] font-semibold tracking-[-0.035em]">
+          <h1 className="h-display text-[clamp(2.2rem,4.6vw,3.8rem)] font-semibold tracking-[-0.035em]">
             {t("landing.hero.title")}
           </h1>
           <p className="mt-6 max-w-lg text-base leading-relaxed text-ink-soft sm:text-lg">{t("landing.hero.lead")}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="/app" className="ui-button-primary">
-              {t("landing.hero.cta")}
-            </a>
-            <a href="#how" className="ui-button-secondary">
-              {t("landing.hero.secondary")}
-            </a>
-          </div>
+          <a href="/app" className="ui-button-primary mt-8 inline-flex">
+            {t("landing.hero.cta")}
+          </a>
         </div>
         <SampleEmail />
       </section>
@@ -63,10 +56,9 @@ export default function Home() {
         <div className="ui-container">
           <h2 className="h-display text-3xl font-semibold tracking-[-0.025em] sm:text-4xl">{t("landing.steps.title")}</h2>
           <ol className="mt-10 grid gap-8 md:grid-cols-3">
-            {STEPS.map((key, index) => (
+            {STEPS.map((key) => (
               <li key={key} className="rounded-(--radius-panel) border border-line bg-surface p-6">
-                <span className="num text-sm font-semibold text-brand-ink">0{index + 1}</span>
-                <h3 className="mt-2 text-lg font-semibold">{t(`landing.steps.${key}.title`)}</h3>
+                <h3 className="text-lg font-semibold">{t(`landing.steps.${key}.title`)}</h3>
                 <p className="mt-2 text-sm leading-6 text-ink-soft">{t(`landing.steps.${key}.body`)}</p>
               </li>
             ))}

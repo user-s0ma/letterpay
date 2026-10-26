@@ -15,7 +15,7 @@
   },
   "letters": {
     "title": "Emails",
-    "description": "For each customer, the next email the AI planned and what happened to the last one. Change the day, coffee or quantity in the table.",
+    "description": "Change the day, coffee or quantity in the table.",
     "demo": "Load demo shop",
     "demoLoading": "Planning with AI…",
     "demoLoaded": "Demo shop loaded",
@@ -39,7 +39,7 @@
       "product": "Coffee",
       "quantity": "Bags",
       "decidedBy": "Decided by",
-      "reason": "Reason (written by AI)",
+      "reason": "Reason",
       "last": "Last email",
       "sentOn": "Sent on",
       "result": "Result",
@@ -98,7 +98,6 @@
   },
   "settings": {
     "title": "Shop",
-    "description": "Your shop's name, the PayPal account that receives payments, currency and shipping.",
     "name": "Shop name",
     "payeeEmail": "PayPal account that receives payments",
     "payeeHint": "In the sandbox, use a sandbox business account email.",
