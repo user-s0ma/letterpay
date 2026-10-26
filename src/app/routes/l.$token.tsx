@@ -29,9 +29,9 @@ export async function loader({ params, context }: Route.LoaderArgs) {
 
 const COPY = {
   unavailable: { title: "This link is no longer valid", body: "It may have expired or already been used." },
-  paid: { title: "Already paid", body: "This order has been paid. Thank you!" },
-  sold_out: { title: "Sold out for now", body: "This coffee ran out before you got here. We will write again soon." },
-  error: { title: "Something went wrong", body: "We could not open PayPal. Please try the link again in a minute." },
+  paid: { title: "Already paid", body: "Thank you!" },
+  sold_out: { title: "Sold out for now", body: "We will write again soon." },
+  error: { title: "Could not open PayPal", body: "Please try the link again in a minute." },
 } as const;
 
 export default function PayLink({ loaderData }: Route.ComponentProps) {

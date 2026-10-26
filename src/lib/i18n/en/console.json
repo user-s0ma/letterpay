@@ -17,16 +17,16 @@
     "title": "Emails",
     "description": "Change the day, coffee or quantity in the table.",
     "demo": "Load demo shop",
-    "demoLoading": "Planning with AI…",
+    "demoLoading": "Planning…",
     "demoLoaded": "Demo shop loaded",
     "demoPartial_one": "The AI could not plan {{count}} customer",
     "demoPartial_other": "The AI could not plan {{count}} customers",
     "demoConfirm": "Replace your products, customers and emails with the demo shop?",
     "emptyTitle": "No customers yet",
-    "emptyDescription": "Load the demo shop to see the AI plan emails for seven customers.",
+    "emptyDescription": "Load the demo shop to try it.",
     "edited": "Updated",
     "sent": "Email sent",
-    "replanned": "The AI planned a new email",
+    "replanned": "Replanned",
     "stopped": "Stopped",
     "open": "Details",
     "columns": {
@@ -43,7 +43,7 @@
       "last": "Last email",
       "sentOn": "Sent on",
       "result": "Result",
-      "revenue": "Paid via email"
+      "revenue": "Revenue"
     },
     "consent": {
       "yes": "Agreed",
@@ -65,7 +65,7 @@
       "whyDay": "Why this day:",
       "none": "Nothing planned.",
       "sendNow": "Send now",
-      "replan": "Ask the AI again",
+      "replan": "Replan",
       "purchases": "Orders",
       "letters": "Emails sent",
       "noLetters": "No emails yet."
@@ -99,10 +99,10 @@
   "settings": {
     "title": "Shop",
     "name": "Shop name",
-    "payeeEmail": "PayPal account that receives payments",
+    "payeeEmail": "PayPal account",
     "payeeHint": "In the sandbox, use a sandbox business account email.",
-    "currency": "Currency (ISO code, e.g. USD)",
-    "shipping": "Shipping per order",
+    "currency": "Currency",
+    "shipping": "Shipping",
     "saved": "Saved"
   }
 }

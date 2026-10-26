@@ -20,56 +20,56 @@
     "login": {
       "heroTitleLine1": "Recommendation emails",
       "heroTitleLine2": "that end in PayPal.",
-      "heroDescription": "Load your purchase history. AI decides who to email, when and with what, and you review every decision in one table."
+      "heroDescription": "AI decides who to email, when, and with what."
     }
   },
   "landing": {
     "hero": {
       "title": "The email is the checkout.",
-      "lead": "Letterpay reads each customer's purchase history, writes to them when they are about to run out, and explains why this coffee. One tap on the email opens PayPal, with their saved address. No store page in between.",
+      "lead": "AI emails each customer the right coffee at the right time, with the reason. One tap opens PayPal checkout.",
       "cta": "Open the console"
     },
     "steps": {
       "title": "How it works",
       "s1": {
         "title": "AI reads the history",
-        "body": "For each customer, Claude looks at what they bought, how much and how often, and which emails they opened or paid. It picks the day to write and the coffee to suggest."
+        "body": "Claude picks the day and the coffee from each customer's orders."
       },
       "s2": {
         "title": "Code checks the plan",
-        "body": "Before anything is saved, the plan is checked against your shop: the date is in the future, the coffee is in stock, the quantity is what they usually buy, the price comes from your product list."
+        "body": "Date, stock, quantity and price are checked against your shop."
       },
       "s3": {
         "title": "The link opens PayPal",
-        "body": "When the customer opens the link, a PayPal order is created at today's price and they land on PayPal checkout. After they approve, the payment is captured and the next email is planned."
+        "body": "The customer pays at today's price in PayPal checkout."
       }
     },
     "owner": {
       "title": "Every AI decision in one table",
-      "body": "The console lists each customer with the next email the AI planned: the day, the coffee, the quantity and the reason, next to what happened to the last one. Change the day, coffee or quantity in the table; Letterpay checks your change the same way and rewrites the reason for the new coffee."
+      "body": "Review and change each customer's next email in the table."
     },
     "guard": {
-      "title": "Built to be welcome in the inbox",
+      "title": "Welcome in the inbox",
       "consent": {
         "title": "Only with consent",
-        "body": "Customers who did not agree to marketing emails are never planned or sent."
+        "body": "Customers without consent get no emails."
       },
       "pace": {
-        "title": "One next email at a time",
-        "body": "The AI sets a single next date per customer, and can decide to stop writing to someone who stopped responding."
+        "title": "One email at a time",
+        "body": "The AI stops writing to customers who stop responding."
       },
       "unsubscribe": {
         "title": "One-click unsubscribe",
-        "body": "Every email has an unsubscribe link that also cancels anything planned."
+        "body": "Unsubscribing also cancels planned emails."
       },
       "price": {
         "title": "No surprise totals",
-        "body": "The email shows the price, shipping and total. Nothing is charged until the customer confirms in PayPal."
+        "body": "Nothing is charged until the customer confirms the total in PayPal."
       }
     },
     "demo": {
-      "title": "Try it with Hoshizora Coffee",
-      "body": "Hoshizora Coffee is a fictional roaster in Japan that sells beans abroad. Sign in, press “Load demo shop” and the AI plans emails for seven customers with different tastes. Demo emails go to your own inbox, and checkout runs in the PayPal sandbox."
+      "title": "Try the demo",
+      "body": "Sign in and press “Load demo shop”. Emails go to your own inbox, and payments use the PayPal sandbox."
     },
     "finalCta": {
       "title": "Turn your order history into the next order.",

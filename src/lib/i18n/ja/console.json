@@ -17,16 +17,16 @@
     "title": "メール",
     "description": "日・豆・量は表の中で直せます。",
     "demo": "デモの店を読み込む",
-    "demoLoading": "AI が決めています…",
+    "demoLoading": "決めています…",
     "demoLoaded": "デモの店を読み込みました",
     "demoPartial_one": "{{count}}人の客のメールを AI が決められませんでした",
     "demoPartial_other": "{{count}}人の客のメールを AI が決められませんでした",
     "demoConfirm": "商品・客・メールを、デモの店のデータに置き換えますか？",
     "emptyTitle": "まだ客がいません",
-    "emptyDescription": "デモの店を読み込むと、7人の客のメールを AI が決めます。",
+    "emptyDescription": "デモの店を読み込んで試せます。",
     "edited": "直しました",
     "sent": "メールを送りました",
-    "replanned": "AI が次のメールを決め直しました",
+    "replanned": "決め直しました",
     "stopped": "送るのをやめた",
     "open": "詳しく",
     "columns": {
@@ -43,7 +43,7 @@
       "last": "前のメール",
       "sentOn": "送った日",
       "result": "結果",
-      "revenue": "メールからの売上"
+      "revenue": "売上"
     },
     "consent": {
       "yes": "同意あり",
@@ -65,7 +65,7 @@
       "whyDay": "この日にした理由：",
       "none": "予定はありません。",
       "sendNow": "今すぐ送る",
-      "replan": "AI に決め直させる",
+      "replan": "決め直す",
       "purchases": "注文",
       "letters": "送ったメール",
       "noLetters": "まだ送っていません。"
@@ -99,10 +99,10 @@
   "settings": {
     "title": "店",
     "name": "店の名前",
-    "payeeEmail": "代金を受け取る PayPal のアカウント",
+    "payeeEmail": "PayPal のアカウント",
     "payeeHint": "サンドボックスでは、サンドボックスのビジネスアカウントのメールアドレスを入れます。",
-    "currency": "通貨（ISO のコード。例：USD）",
-    "shipping": "1回の注文の送料",
+    "currency": "通貨",
+    "shipping": "送料",
     "saved": "保存しました"
   }
 }

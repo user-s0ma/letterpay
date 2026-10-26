@@ -51,7 +51,7 @@ export default function PayReturn({ loaderData }: Route.ComponentProps) {
   if (state === "not_completed") {
     return (
       <LetterNotice shopName={shopName} title="The payment did not go through">
-        PayPal did not take the payment. You can open the link in the email again to retry.
+        Open the link in the email again to retry.
       </LetterNotice>
     );
   }
