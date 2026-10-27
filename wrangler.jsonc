@@ -8,9 +8,9 @@
   "workers_dev": true,
   "preview_urls": false,
   "vars": {
-    "VITE_PUBLIC_APP_URL": "https://letterpay.example.workers.dev",
-    // Cloudflare Turnstile のサイトキー (下は常に通るテスト用の値。公開前に本物に替える)
-    "VITE_PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
+    "VITE_PUBLIC_APP_URL": "https://letterpay.magnificentrue.workers.dev",
+    // Cloudflare Turnstile のサイトキー (ウィジェット letterpay。公開の値)
+    "VITE_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAAFmQGBLjE2tIRgJy",
     "AUTH_EMAIL_FROM": "noreply@example.com",
     "LETTER_EMAIL_FROM": "letters@example.com",
     "PAYPAL_API_BASE": "https://api-m.sandbox.paypal.com",
@@ -25,7 +25,7 @@
     {
       "binding": "DB",
       "database_name": "letterpay",
-      "database_id": "02d4d5c3-af8d-40c6-b44d-e97d2e4100dc",
+      "database_id": "bc5cd173-75a7-4117-aab6-b96aa624d56d",
       "migrations_dir": "drizzle"
     }
   ],
