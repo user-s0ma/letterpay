@@ -483,7 +483,6 @@ export async function listLetterRows(env: Env, userId: string) {
         customerId: purchase.customerId,
         count: sql<string>`count(*)`,
         lastAt: sql<number>`max(${purchase.purchasedAt})`,
-        letterpayMinor: sql<string>`coalesce(sum(case when ${purchase.source} = 'letterpay' then ${purchase.quantity} * ${purchase.unitPriceMinor} else 0 end), 0)`,
       })
       .from(purchase)
       .where(eq(purchase.userId, userId))
@@ -507,7 +506,8 @@ export async function listLetterRows(env: Env, userId: string) {
       stoppedReason: person.lettersStoppedReason,
       purchases: Number(stats?.count ?? 0),
       lastPurchaseOn: stats?.lastAt ? utcDate(new Date(stats.lastAt)) : null,
-      letterpayRevenueMinor: Number(stats?.letterpayMinor ?? 0),
+      // PayPal で払われた額 (送料込み)
+      letterpayRevenueMinor: own.reduce((sum, row) => sum + (row.status === "paid" ? (row.paidMinor ?? 0) : 0), 0),
       planned: planned && {
         id: planned.id,
         sendOn: planned.sendOn,
@@ -535,7 +535,10 @@ export async function listLetterRows(env: Env, userId: string) {
   });
 }
 
-/** 注文の表: 店のすべての購入を新しい順に。Letterpay のメールから払われたものは source が letterpay */
+/**
+ * 注文の表: 店のすべての購入を新しい順に。Letterpay のメールから払われたものは source が letterpay で、
+ * 金額は PayPal で払われた額 (送料込み)。取り込んだ購入は送料を持たないので、商品の代金
+ */
 export async function listPurchaseRows(env: Env, userId: string) {
   const rows = await getDb(env)
     .select({
@@ -547,15 +550,17 @@ export async function listPurchaseRows(env: Env, userId: string) {
       quantity: purchase.quantity,
       unitPriceMinor: purchase.unitPriceMinor,
       source: purchase.source,
+      paidMinor: letter.paidMinor,
     })
     .from(purchase)
+    .leftJoin(letter, eq(letter.id, purchase.letterId))
     .innerJoin(customer, eq(customer.id, purchase.customerId))
     .innerJoin(product, eq(product.id, purchase.productId))
     .where(eq(purchase.userId, userId))
     .orderBy(desc(purchase.purchasedAt));
-  return rows.map(({ purchasedAt, ...row }) => ({
+  return rows.map(({ purchasedAt, paidMinor, ...row }) => ({
     ...row,
     purchasedOn: utcDate(purchasedAt),
-    amountMinor: row.quantity * row.unitPriceMinor,
+    amountMinor: paidMinor ?? row.quantity * row.unitPriceMinor,
   }));
 }

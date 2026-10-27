@@ -6,6 +6,17 @@ Letterpay reads each customer's purchase history and lets AI decide when to writ
 
 The demo shop, **Hoshizora Coffee**, is a fictional roaster in Japan that sells beans abroad. Coffee runs out at a predictable pace and tastes show up in the order history, so it is a good fit for "the right coffee, right when you need it".
 
+## Try it
+
+Live: https://letterpay.magnificentrue.workers.dev (PayPal sandbox)
+
+1. Press **Try the demo account** on the top page. The first sign-in can take about 30 seconds while the AI plans the demo customers' next emails.
+2. The table shows each customer's next email: day, product, quantity and the AI's reasons. Open a customer with **Details**.
+3. Press **Send now**. The demo does not deliver email; it shows the email it would send, with its **Pay with PayPal** button and a PayPal sandbox buyer to pay with.
+4. Pay as that buyer. Back in the console, the order appears in **Orders** and the AI plans the customer's next email.
+
+The demo account is shared, so products, shop settings and the account are read-only there.
+
 ## How it works
 
 1. **AI plans the next email.** When a customer buys or an email is sent, Claude reads that customer's purchases (what, how much, how often), the emails already sent and what happened to them, and the current product list (name, description, size, price, arrival date, stock). It returns structured JSON: the day to send, the product, the quantity, a reason written to the customer, and a reason for the day for the shop owner. It can also decide to stop writing to someone.
@@ -46,8 +57,8 @@ Set `AUTH_EMAIL_FROM` and `LETTER_EMAIL_FROM` in `wrangler.jsonc` to addresses o
 ```bash
 npx wrangler d1 create letterpay       # put the database_id in wrangler.jsonc
 npm run db:migrate                     # create the tables in the remote D1
-npx wrangler secret put BETTER_AUTH_SECRET   # and the other values in .dev.vars.example
 npm run deploy
+node scripts/put-secrets.mjs           # secrets from .dev.vars; new auth and link-signing keys for production
 ```
 
 ## Tests
