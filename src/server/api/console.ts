@@ -73,8 +73,11 @@ const overrideSchema = z.object({
   quantity: z.number().int().min(1),
 });
 
-/** デモアカウントでも使える書き込み (予定を直す、今すぐ送る (中身を見せるだけ)、決め直す、デモの店を作り直す) */
-const DEMO_WRITE_PATHS = [/^\/api\/letters\/[^/]+$/, /^\/api\/letters\/[^/]+\/send$/, /^\/api\/customers\/[^/]+\/plan$/, /^\/api\/demo$/];
+/**
+ * デモアカウントでも使える書き込み (予定を直す、今すぐ送る (中身を見せるだけ)、決め直す)。
+ * デモの店の作り直しは使えない (共有なので、ほかの審査員の操作の結果まで消してしまう)
+ */
+const DEMO_WRITE_PATHS = [/^\/api\/letters\/[^/]+$/, /^\/api\/letters\/[^/]+\/send$/, /^\/api\/customers\/[^/]+\/plan$/];
 
 const console_ = new Hono<ApiEnv>();
 console_.use("*", requireUser());

@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Modal } from "@/components/ui/Modal";
 import { PageBody, PageHeader } from "@/components/ui/PageHeader";
 import { useConfirm } from "@/components/ui/useConfirm";
+import { isDemoUser } from "@/lib/auth/demo-account";
 import {
   getCustomerHistory,
   getLetterPreview,
@@ -25,7 +26,9 @@ import {
 /** 店の人の主画面: 客ごとに、AI が決めた次のメールと、送ったメールの結果を表で見る */
 export default function LettersPage() {
   const { t } = useTranslation();
-  const { openMobileNavigation } = useAccountPage();
+  const { openMobileNavigation, user } = useAccountPage();
+  // デモアカウントは共有なので、デモの店を作り直せない (ほかの審査員の操作の結果まで消える)
+  const demo = isDemoUser(user);
   const queryClient = useQueryClient();
   const [confirm, confirmDialog] = useConfirm();
   const [open, setOpen] = useState<LetterRow | null>(null);
@@ -93,15 +96,17 @@ export default function LettersPage() {
               <RefreshCw className="h-4 w-4" />
               {t("common.refresh")}
             </button>
-            <button
-              className="console-button-primary"
-              type="button"
-              disabled={busy !== null}
-              onClick={() => void startDemo()}
-            >
-              <Sparkles className="h-4 w-4" />
-              {busy === "demo" ? t("letters.demoLoading") : t("letters.demo")}
-            </button>
+            {!demo && (
+              <button
+                className="console-button-primary"
+                type="button"
+                disabled={busy !== null}
+                onClick={() => void startDemo()}
+              >
+                <Sparkles className="h-4 w-4" />
+                {busy === "demo" ? t("letters.demoLoading") : t("letters.demo")}
+              </button>
+            )}
           </>
         }
       />
