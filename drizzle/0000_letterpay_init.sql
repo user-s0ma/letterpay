@@ -124,6 +124,7 @@ CREATE UNIQUE INDEX `Purchase_letter_key` ON `Purchase` (`letterId`);--> stateme
 CREATE TABLE `Shop` (
 	`userId` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
+	`address` text NOT NULL,
 	`payeeEmail` text NOT NULL,
 	`currency` text NOT NULL,
 	`shippingMinor` integer NOT NULL,

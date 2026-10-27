@@ -187,6 +187,7 @@ async function composeLetter(
   const payUrl = `${base}/l/${await createLinkToken(env.LINK_SIGNING_SECRET, "pay", row.id)}`;
   const message = renderLetterEmail({
     shopName: owner.name,
+    shopAddress: owner.address,
     customerName: person.name,
     reason: row.reason,
     product: item,

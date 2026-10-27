@@ -109,6 +109,8 @@
   "settings": {
     "title": "Shop",
     "name": "Shop name",
+    "address": "Postal address",
+    "addressHint": "Shown at the bottom of every email. Marketing email laws (such as CAN-SPAM) require it.",
     "payeeEmail": "PayPal account",
     "payeeHint": "In the sandbox, use a sandbox business account email.",
     "currency": "Currency (ISO code, e.g. USD)",

@@ -41,6 +41,7 @@ const send = (method: "POST" | "PUT", body?: unknown): RequestInit => ({
 
 export type ShopInput = {
   name: string;
+  address: string;
   payeeEmail: string;
   currency: string;
   shippingMinor: number;

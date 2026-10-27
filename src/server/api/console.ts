@@ -51,6 +51,7 @@ function failure(c: Context<ApiEnv>, error: unknown) {
 
 const shopSchema = z.object({
   name: z.string().trim().min(1).max(120),
+  address: z.string().trim().min(1).max(300),
   payeeEmail: z.email().max(191),
   currency: z.string().regex(/^[A-Z]{3}$/),
   shippingMinor: z.number().int().min(0),

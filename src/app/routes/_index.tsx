@@ -28,7 +28,7 @@ function SampleEmail() {
           Shipping $12.00 · <span className="font-semibold">Total $44.00</span>
         </p>
       </div>
-      <span className="mt-5 inline-flex rounded-full bg-[#ffc439] px-6 py-2.5 text-sm font-bold text-[#111]">
+      <span className="mt-5 inline-flex rounded-full bg-ink px-6 py-2.5 text-sm font-bold text-surface">
         Pay with PayPal
       </span>
     </div>

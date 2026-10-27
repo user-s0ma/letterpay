@@ -4,6 +4,9 @@ import { getDb } from "@/lib/db/client";
 import { customer, letter, product, purchase, shop } from "@/lib/db/schema";
 import { planFor } from "@/lib/letters/service";
 
+/** デモの店の住所 (架空の店なので、架空とわかる住所にする) */
+const DEMO_ADDRESS = "Hoshizora Coffee (fictional demo shop), 1-2-3 Example-cho, Kita-ku, Osaka 530-0000, Japan";
+
 /**
  * デモの店 Hoshizora Coffee (架空) の商品と、好みと飲む量の違う客の購入履歴を作る。
  * 客のメールアドレスは店の人のアドレスに +名前 を付けたもの (デモのメールが店の人に届く)
@@ -89,10 +92,10 @@ export async function loadDemoShop(env: AppEnv, owner: { id: string; email: stri
   await db.delete(product).where(eq(product.userId, owner.id));
   await db
     .insert(shop)
-    .values({ userId: owner.id, name: "Hoshizora Coffee", payeeEmail, currency: "USD", shippingMinor: 1200 })
+    .values({ userId: owner.id, name: "Hoshizora Coffee", address: DEMO_ADDRESS, payeeEmail, currency: "USD", shippingMinor: 1200 })
     .onConflictDoUpdate({
       target: shop.userId,
-      set: { name: "Hoshizora Coffee", currency: "USD", shippingMinor: 1200, ...(isDemoUser(owner) ? { payeeEmail } : {}) },
+      set: { name: "Hoshizora Coffee", address: DEMO_ADDRESS, currency: "USD", shippingMinor: 1200, ...(isDemoUser(owner) ? { payeeEmail } : {}) },
     });
 
   const productIds = new Map<string, string>();

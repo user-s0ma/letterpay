@@ -11,6 +11,8 @@ function escapeHtml(value: string) {
 
 export type LetterEmailInput = {
   shopName: string;
+  /** 店の郵便の住所 (販促のメールに載せる) */
+  shopAddress: string;
   customerName: string;
   reason: string;
   product: { name: string; description: string; size: string };
@@ -44,6 +46,7 @@ export function renderLetterEmail(input: LetterEmailInput) {
     `— ${input.shopName}`,
     "",
     `You get these emails because you agreed to hear from ${input.shopName}. Unsubscribe: ${input.unsubscribeUrl}`,
+    input.shopAddress,
   ].join("\n");
   const html = `<!doctype html>
 <html lang="en">
@@ -59,13 +62,14 @@ export function renderLetterEmail(input: LetterEmailInput) {
           <p style="margin:0;font-size:14px;">${escapeHtml(line)}</p>
           <p style="margin:4px 0 0;font-size:14px;">Shipping ${escapeHtml(money(input.shippingMinor))} · <strong>Total ${escapeHtml(money(total))}</strong></p>
         </div>
-        <a href="${escapeHtml(input.payUrl)}" style="display:inline-block;background:#ffc439;color:#111;border-radius:999px;padding:13px 28px;font-family:Arial,sans-serif;font-size:16px;font-weight:700;text-decoration:none;">Pay with PayPal</a>
+        <a href="${escapeHtml(input.payUrl)}" style="display:inline-block;background:#2b2420;color:#fffdf9;border-radius:999px;padding:13px 28px;font-family:Arial,sans-serif;font-size:16px;font-weight:700;text-decoration:none;">Pay with PayPal</a>
         <p style="margin:16px 0 0;font-family:Arial,sans-serif;font-size:12px;color:#7a6a5c;">Ships to the address in your PayPal account. Nothing is charged until you confirm in PayPal.</p>
         <p style="margin:24px 0 0;font-size:16px;">— ${escapeHtml(input.shopName)}</p>
       </div>
       <p style="margin:20px 0 0;font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#8a7d70;">
         You get these emails because you agreed to hear from ${escapeHtml(input.shopName)}.
-        <a href="${escapeHtml(input.unsubscribeUrl)}" style="color:#8a7d70;">Unsubscribe</a>
+        <a href="${escapeHtml(input.unsubscribeUrl)}" style="color:#8a7d70;">Unsubscribe</a><br />
+        ${escapeHtml(input.shopAddress)}
       </p>
     </div>
   </body>

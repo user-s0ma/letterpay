@@ -33,11 +33,12 @@ function ShopForm({ current, ownerEmail }: { current: ShopRecord | null; ownerEm
     current
       ? {
           name: current.name,
+          address: current.address,
           payeeEmail: current.payeeEmail,
           currency: current.currency,
           shipping: String(current.shippingMinor / 10 ** currencyDigits(current.currency)),
         }
-      : { name: "", payeeEmail: ownerEmail, currency: "USD", shipping: "" },
+      : { name: "", address: "", payeeEmail: ownerEmail, currency: "USD", shipping: "" },
   );
   const [saving, setSaving] = useState(false);
 
@@ -50,6 +51,7 @@ function ShopForm({ current, ownerEmail }: { current: ShopRecord | null; ownerEm
       const currency = form.currency.trim().toUpperCase();
       await saveShop({
         name: form.name.trim(),
+        address: form.address.trim(),
         payeeEmail: form.payeeEmail.trim(),
         currency,
         shippingMinor: Math.round(Number(form.shipping) * 10 ** currencyDigits(currency)),
@@ -68,6 +70,17 @@ function ShopForm({ current, ownerEmail }: { current: ShopRecord | null; ownerEm
       <label className="block">
         <span className="console-label">{t("settings.name")}</span>
         <input className="console-input" required maxLength={120} value={form.name} onChange={(e) => set({ name: e.target.value })} />
+      </label>
+      <label className="block">
+        <span className="console-label">{t("settings.address")}</span>
+        <textarea
+          className="console-input min-h-20"
+          required
+          maxLength={300}
+          value={form.address}
+          onChange={(e) => set({ address: e.target.value })}
+        />
+        <span className="console-hint">{t("settings.addressHint")}</span>
       </label>
       <label className="block">
         <span className="console-label">{t("settings.payeeEmail")}</span>

@@ -16,6 +16,8 @@ const updatedAt = () =>
 export const shop = sqliteTable("Shop", {
   userId: text("userId").primaryKey(),
   name: text("name").notNull(),
+  /** 店の郵便の住所。販促のメールに載せる (米国の CAN-SPAM 法、日本の特定電子メール法) */
+  address: text("address").notNull(),
   /** 代金を受け取る PayPal のアカウント (注文の payee) */
   payeeEmail: text("payeeEmail").notNull(),
   /** 価格の通貨 (ISO 4217)。金額は最小単位の整数で持つ */
