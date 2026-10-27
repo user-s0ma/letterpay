@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
-import { localizeHref, useLocale } from "@/lib/i18n";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
@@ -36,7 +34,6 @@ export function SiteHeader({
   transparentAtTop?: boolean;
 }) {
   const { t } = useTranslation();
-  const locale = useLocale();
   const [scrolled, setScrolled] = useState(!transparentAtTop);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -57,14 +54,14 @@ export function SiteHeader({
             : "border-transparent bg-transparent"
         }`}
       >
-        <a href={localizeHref("/", locale)} aria-label="Letterpay">
+        <a href="/" aria-label="Letterpay">
           <Logo />
         </a>
         <div className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map(([labelKey, href]) => (
             <a
               key={href}
-              href={localizeHref(href, locale)}
+              href={href}
               className="rounded-full px-4 py-1.5 text-sm text-ink-soft transition-colors hover:bg-line hover:text-ink"
             >
               {t(labelKey)}
@@ -101,7 +98,7 @@ export function SiteHeader({
           {NAV_LINKS.map(([labelKey, href]) => (
             <a
               key={href}
-              href={localizeHref(href, locale)}
+              href={href}
               onClick={() => setMenuOpen(false)}
               className="block border-b border-line py-3 text-base"
             >
@@ -131,7 +128,6 @@ export function SiteHeader({
 
 export function SiteFooter() {
   const { t } = useTranslation();
-  const locale = useLocale();
   const [year] = useState(() => new Date().getFullYear());
 
   return (
@@ -151,7 +147,7 @@ export function SiteFooter() {
                 {col.links.map(([labelKey, href]) => (
                   <li key={labelKey}>
                     <a
-                      href={localizeHref(href, locale)}
+                      href={href}
                       className="text-sm text-ink-mute transition-colors hover:text-ink"
                     >
                       {t(labelKey)}
@@ -166,7 +162,6 @@ export function SiteFooter() {
           <p className="text-sm text-ink-mute">
             © {year} Letterpay. All rights reserved.
           </p>
-          <LanguageSwitcher />
         </div>
       </div>
     </footer>

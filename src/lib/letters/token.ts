@@ -7,7 +7,7 @@ import { bytesToBase64Url, timingSafeEqual } from "@/lib/util/encoding";
 export type LinkPurpose = "pay" | "unsubscribe";
 
 async function sign(secret: string, payload: string) {
-  if (secret.length < 32) throw new Error("LINK_SIGNING_SECRET は32文字以上にしてください");
+  if (secret.length < 32) throw new Error("LINK_SIGNING_SECRET must be at least 32 characters");
   const key = await crypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(secret),

@@ -29,7 +29,7 @@ async function accessToken(env: PayPalEnv) {
     signal: AbortSignal.timeout(15_000),
   });
   if (!res.ok) {
-    throw new PayPalError(`PayPal のトークンを取れませんでした (${res.status})`, res.status, res.headers.get("paypal-debug-id"));
+    throw new PayPalError(`Could not get a PayPal access token (${res.status})`, res.status, res.headers.get("paypal-debug-id"));
   }
   return ((await res.json()) as { access_token: string }).access_token;
 }
@@ -56,7 +56,7 @@ async function call<T>(
     | null;
   if (!res.ok || !data) {
     throw new PayPalError(
-      `PayPal の呼び出しに失敗しました (${res.status} ${data?.message ?? ""})`.trim(),
+      `PayPal request failed (${res.status} ${data?.message ?? ""})`.trim(),
       res.status,
       res.headers.get("paypal-debug-id"),
       data?.details?.[0]?.issue ?? null,
@@ -123,7 +123,7 @@ export async function createOrder(env: PayPalEnv, input: OrderInput, requestId: 
     },
   });
   const approve = order.links.find((link) => link.rel === "payer-action");
-  if (!approve) throw new PayPalError("PayPal の支払い画面の URL が返りませんでした", 502, null);
+  if (!approve) throw new PayPalError("PayPal returned no checkout URL", 502, null);
   return { orderId: order.id, approveUrl: approve.href };
 }
 

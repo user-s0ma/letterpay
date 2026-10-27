@@ -47,7 +47,6 @@
     "closeMenu": "Close menu",
     "profile": "Profile",
     "profileModal": {
-      "language": "Language",
       "updateFailed": "Failed to update profile",
       "signingOut": "Logging out...",
       "signOutFailed": "Failed to log out"

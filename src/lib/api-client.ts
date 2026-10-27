@@ -1,4 +1,4 @@
-import { clientLocale, translate } from "@/lib/i18n";
+import { translate } from "@/lib/i18n";
 import type { PlannerContext } from "@/lib/letters/planner";
 import type { listLetterRows } from "@/lib/letters/service";
 
@@ -27,7 +27,7 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   });
   const data = (await response.json().catch(() => null)) as (T & { message?: string }) | null;
   if (!response.ok) {
-    throw new ApiError(data?.message || translate(clientLocale(), "common.apiError"), response.status, data);
+    throw new ApiError(data?.message || translate("common.apiError"), response.status, data);
   }
   return data as T;
 }

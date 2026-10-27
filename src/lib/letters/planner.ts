@@ -56,7 +56,7 @@ For one customer you get their purchase history, the emails already sent and wha
 - how many bags: the same number they usually buy.
 - the reason, written to the customer in a warm, plain voice. The email already opens with "Hi <first name>," and signs off with the shop name, so write only the body: no greeting, no sign-off. Refer to their actual history. No invented facts about the coffee beyond the product notes. Do not promise anything the shop has not offered: no reserved or set-aside bags, no roast or delivery dates, no discounts.
 
-Never schedule an email on or before today.`;
+Write all text in English. Never schedule an email on or before today.`;
 
 export class PlanRejected extends Error {}
 

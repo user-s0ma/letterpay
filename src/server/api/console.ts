@@ -4,7 +4,7 @@ import { z } from "zod";
 import { auth } from "@/lib/auth/server";
 import { getDb } from "@/lib/db/client";
 import { letter, product, shop } from "@/lib/db/schema";
-import { detectLocale, translate } from "@/lib/i18n";
+import { translate } from "@/lib/i18n";
 import { PlanRejected } from "@/lib/letters/planner";
 import {
   LetterError,
@@ -28,7 +28,7 @@ function requireUser(): MiddlewareHandler<ApiEnv> {
       headers: c.req.raw.headers,
     });
     if (!session) {
-      return c.json({ message: translate(detectLocale(c.req.raw), "server.common.loginRequired") }, 401);
+      return c.json({ message: translate("server.common.loginRequired") }, 401);
     }
     c.set("user", { id: session.user.id, name: session.user.name, email: session.user.email });
     await next();
@@ -80,7 +80,7 @@ console_.use("*", requireUser());
 console_.use("*", async (c, next) => {
   if (c.req.method === "GET" || !isDemoUser(currentUser(c))) return next();
   if (DEMO_WRITE_PATHS.some((pattern) => pattern.test(new URL(c.req.url).pathname))) return next();
-  return c.json({ message: translate(detectLocale(c.req.raw), "server.common.demoReadOnly") }, 403);
+  return c.json({ message: translate("server.common.demoReadOnly") }, 403);
 });
 
 console_.get("/shop", async (c) => {

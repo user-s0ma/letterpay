@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { detectLocale, translate } from "@/lib/i18n";
+import { translate } from "@/lib/i18n";
 import authApi from "./auth";
 import console_ from "./console";
 import type { ApiEnv } from "./types";
@@ -37,22 +37,11 @@ api.route("/api", console_);
 
 api.onError((error, c) => {
   console.error(error);
-  return c.json(
-    {
-      message: translate(
-        detectLocale(c.req.raw),
-        "server.common.internalError",
-      ),
-    },
-    500,
-  );
+  return c.json({ message: translate("server.common.internalError") }, 500);
 });
 
 api.notFound((c) =>
-  c.json(
-    { message: translate(detectLocale(c.req.raw), "server.common.notFound") },
-    404,
-  ),
+  c.json({ message: translate("server.common.notFound") }, 404),
 );
 
 export default api;

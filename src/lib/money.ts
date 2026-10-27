@@ -3,7 +3,7 @@
 /** 通貨の小数の桁 (JPY などは 0) */
 export function currencyDigits(currency: string) {
   const { maximumFractionDigits } = new Intl.NumberFormat("en", { style: "currency", currency }).resolvedOptions();
-  if (maximumFractionDigits === undefined) throw new Error(`通貨の桁が分かりません: ${currency}`);
+  if (maximumFractionDigits === undefined) throw new Error(`Unknown currency digits: ${currency}`);
   return maximumFractionDigits;
 }
 
