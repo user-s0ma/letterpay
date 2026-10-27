@@ -85,7 +85,11 @@
       "signupError": "Could not create your account",
       "signupTab": "Sign up",
       "verificationEmailDescription": "Open the link sent to {{email}}.",
-      "verificationEmailSent": "Verification email sent"
+      "verificationEmailSent": "Verification email sent",
+      "tryDemo": "Try the demo account",
+      "demoOpening": "Opening the demo…",
+      "demoError": "Could not open the demo",
+      "ownAccount": "Your own account"
     },
     "processing": "Processing...",
     "resetPassword": {
@@ -128,6 +132,7 @@
   "server": {
     "common": {
       "internalError": "An error occurred while processing the API request.",
+      "demoReadOnly": "This is not available in the demo account.",
       "loginRequired": "Please sign in.",
       "notFound": "API not found."
     }

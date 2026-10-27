@@ -12,6 +12,7 @@ import {
   useAuthTurnstile,
 } from "@/lib/auth/use-auth-turnstile";
 import { appContext } from "@/lib/util/app-context";
+import { DemoButton } from "@/components/account/DemoButton";
 import { LogoMark } from "@/components/ui/LogoMark";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
@@ -75,6 +76,8 @@ export default function Login() {
     null,
   );
   const { captchaWidget, captchaHeaders, resetCaptcha } = useAuthTurnstile();
+  // 自分のアカウントの欄は畳んでおく。ログインが要るページから来たときは開く
+  const [ownAccountOpen, setOwnAccountOpen] = useState(() => searchParams.has("callbackUrl"));
 
   const callbackUrl = useMemo(() => {
     const value = searchParams.get("callbackUrl");
@@ -204,7 +207,14 @@ export default function Login() {
             </p>
           </section>
           <section className="ui-card p-6">
-            <div className="ui-tabs">
+            <DemoButton className="ui-button-primary w-full" />
+            <details
+              className="mt-5"
+              open={ownAccountOpen || verificationEmail !== null}
+              onToggle={(event) => setOwnAccountOpen(event.currentTarget.open)}
+            >
+              <summary className="cursor-pointer text-sm text-ink-mute hover:text-ink">{t("auth.login.ownAccount")}</summary>
+            <div className="ui-tabs mt-4">
               <button
                 className="ui-tab"
                 type="button"
@@ -282,7 +292,7 @@ export default function Login() {
               />
 
               <button
-                className="ui-button-primary mt-1 w-full"
+                className="ui-button-secondary mt-1 w-full"
                 type="submit"
                 disabled={isLoading}
               >
@@ -295,6 +305,7 @@ export default function Login() {
               </button>
               {captchaWidget}
             </form>
+            </details>
           </section>
         </div>
       </main>

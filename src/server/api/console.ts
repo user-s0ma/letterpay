@@ -14,7 +14,8 @@ import {
   planFor,
   sendLetter,
 } from "@/lib/letters/service";
-import { loadDemoShop } from "@/lib/shop/demo";
+import { isDemoUser } from "@/lib/auth/demo-account";
+import { loadAndPlanDemoShop } from "@/lib/shop/demo";
 import type { ApiEnv, SessionUser } from "./types";
 
 /**
@@ -71,8 +72,16 @@ const overrideSchema = z.object({
   quantity: z.number().int().min(1),
 });
 
+/** デモアカウントでも使える書き込み (予定を直す、今すぐ送る (中身を見せるだけ)、決め直す、デモの店を作り直す) */
+const DEMO_WRITE_PATHS = [/^\/api\/letters\/[^/]+$/, /^\/api\/letters\/[^/]+\/send$/, /^\/api\/customers\/[^/]+\/plan$/, /^\/api\/demo$/];
+
 const console_ = new Hono<ApiEnv>();
 console_.use("*", requireUser());
+console_.use("*", async (c, next) => {
+  if (c.req.method === "GET" || !isDemoUser(currentUser(c))) return next();
+  if (DEMO_WRITE_PATHS.some((pattern) => pattern.test(new URL(c.req.url).pathname))) return next();
+  return c.json({ message: translate(detectLocale(c.req.raw), "server.common.demoReadOnly") }, 403);
+});
 
 console_.get("/shop", async (c) => {
   const [row] = await getDb(c.env).select().from(shop).where(eq(shop.userId, currentUser(c).id)).limit(1);
@@ -139,8 +148,17 @@ console_.post("/letters/:id/send", async (c) => {
     .where(and(eq(letter.userId, currentUser(c).id), eq(letter.id, c.req.param("id")), eq(letter.status, "planned")))
     .limit(1);
   if (!row) return c.json({ message: "Planned email not found" }, 404);
+  // デモの客の宛先は実在しないので、デモアカウントでは送らずに、届くメールの中身を返す
+  const demo = isDemoUser(currentUser(c));
   try {
-    await sendLetter(c.env, row);
+    const result = await sendLetter(c.env, row, demo ? "preview" : "email");
+    if (demo && result.preview) {
+      return c.json({
+        ok: true,
+        preview: result.preview,
+        sandboxBuyer: { email: c.env.DEMO_SANDBOX_BUYER_EMAIL, password: c.env.DEMO_SANDBOX_BUYER_PASSWORD },
+      });
+    }
   } catch (error) {
     return failure(c, error);
   }
@@ -168,14 +186,6 @@ console_.post("/customers/:id/plan", async (c) => {
 });
 
 /** デモの店のデータを作り直し、客ごとの次のメールを AI に決めさせる */
-console_.post("/demo", async (c) => {
-  const user = currentUser(c);
-  const customerIds = await loadDemoShop(c.env, user);
-  // 同意していない客は planFor が何も決めずに返す
-  const results = await Promise.allSettled(customerIds.map((id) => planFor(c.env, user.id, id)));
-  const failed = results.filter((result) => result.status === "rejected");
-  for (const result of failed) console.error("デモの客のメールを決められませんでした:", result.reason);
-  return c.json({ customers: customerIds.length, failed: failed.length });
-});
+console_.post("/demo", async (c) => c.json(await loadAndPlanDemoShop(c.env, currentUser(c))));
 
 export default console_;

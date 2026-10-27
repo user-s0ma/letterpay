@@ -69,6 +69,11 @@
       "purchases": "Orders",
       "letters": "Emails sent",
       "noLetters": "No emails yet."
+    },
+    "preview": {
+      "to": "To {{email}}",
+      "sandboxBuyer": "PayPal sandbox buyer: {{email}} / {{password}}",
+      "open": "Pay with PayPal"
     }
   },
   "products": {
@@ -101,7 +106,7 @@
     "name": "Shop name",
     "payeeEmail": "PayPal account",
     "payeeHint": "In the sandbox, use a sandbox business account email.",
-    "currency": "Currency",
+    "currency": "Currency (ISO code, e.g. USD)",
     "shipping": "Shipping",
     "saved": "Saved"
   }

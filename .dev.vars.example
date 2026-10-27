@@ -18,3 +18,8 @@ ANTHROPIC_API_KEY=
 
 # --- Signs the links in recommendation emails (32+ random characters)
 LINK_SIGNING_SECRET=replace-with-at-least-32-random-characters
+
+# --- Demo account for hackathon judges (PayPal sandbox). The buyer password is shown on the demo screen
+DEMO_PAYEE_EMAIL=
+DEMO_SANDBOX_BUYER_EMAIL=
+DEMO_SANDBOX_BUYER_PASSWORD=

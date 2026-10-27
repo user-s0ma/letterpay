@@ -85,7 +85,11 @@
       "signupError": "アカウントを作成できませんでした",
       "signupTab": "新規登録",
       "verificationEmailDescription": "{{email}} に届いたリンクを開いてください。",
-      "verificationEmailSent": "確認メールを送信しました"
+      "verificationEmailSent": "確認メールを送信しました",
+      "tryDemo": "デモアカウントで試す",
+      "demoOpening": "デモを開いています…",
+      "demoError": "デモを開けませんでした",
+      "ownAccount": "自分のアカウント"
     },
     "processing": "処理中…",
     "resetPassword": {
@@ -128,6 +132,7 @@
   "server": {
     "common": {
       "internalError": "API処理でエラーが発生しました",
+      "demoReadOnly": "デモアカウントでは使えません",
       "loginRequired": "ログインが必要です",
       "notFound": "APIが見つかりません"
     }

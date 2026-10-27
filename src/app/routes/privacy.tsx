@@ -62,7 +62,7 @@ const SECTIONS_JA: LegalSection[] = [
   },
   {
     heading: "6. 保存期間",
-    paragraphs: ["店がアカウントを削除するまで保存します。支払いの記録は、会計・税務上必要な期間保存することがあります。"],
+    paragraphs: ["アカウントを削除しても、店と客の情報は残ります。"],
   },
   {
     heading: "7. 安全管理",
@@ -116,7 +116,7 @@ const SECTIONS_EN: LegalSection[] = [
   },
   {
     heading: "6. Retention",
-    paragraphs: ["Information is kept until the shop deletes its account. Payment records may be kept as long as accounting and tax rules require."],
+    paragraphs: ["Shop and customer information remains after the shop deletes its account."],
   },
   {
     heading: "7. Security",

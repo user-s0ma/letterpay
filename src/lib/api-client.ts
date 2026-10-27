@@ -102,8 +102,14 @@ export function overrideLetter(id: string, input: { sendOn: string; productId: s
   return apiRequest<{ ok: true }>(`/api/letters/${encodeURIComponent(id)}`, send("PUT", input));
 }
 
+/** デモアカウントでは送らずに、届くメールの中身と、払う側のサンドボックスのアカウントが返る */
+export type LetterPreview = {
+  preview: { to: string; subject: string; html: string; payUrl: string };
+  sandboxBuyer: { email: string; password: string };
+};
+
 export function sendLetterNow(id: string) {
-  return apiRequest<{ ok: true }>(`/api/letters/${encodeURIComponent(id)}/send`, send("POST"));
+  return apiRequest<{ ok: true } & Partial<LetterPreview>>(`/api/letters/${encodeURIComponent(id)}/send`, send("POST"));
 }
 
 export function replanCustomer(customerId: string) {

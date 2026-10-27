@@ -69,6 +69,11 @@
       "purchases": "注文",
       "letters": "送ったメール",
       "noLetters": "まだ送っていません。"
+    },
+    "preview": {
+      "to": "宛先 {{email}}",
+      "sandboxBuyer": "PayPal サンドボックスの払う側：{{email}} / {{password}}",
+      "open": "PayPal で払う"
     }
   },
   "products": {
@@ -101,7 +106,7 @@
     "name": "店の名前",
     "payeeEmail": "PayPal のアカウント",
     "payeeHint": "サンドボックスでは、サンドボックスのビジネスアカウントのメールアドレスを入れます。",
-    "currency": "通貨",
+    "currency": "通貨（ISO のコード。例：USD）",
     "shipping": "送料",
     "saved": "保存しました"
   }

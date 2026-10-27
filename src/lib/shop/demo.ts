@@ -1,6 +1,8 @@
 import { eq } from "drizzle-orm";
+import { isDemoUser } from "@/lib/auth/demo-account";
 import { getDb } from "@/lib/db/client";
 import { customer, letter, product, purchase, shop } from "@/lib/db/schema";
+import { planFor } from "@/lib/letters/service";
 
 /**
  * デモの店 Hoshizora Coffee (架空) の商品と、好みと飲む量の違う客の購入履歴を作る。
@@ -75,18 +77,25 @@ function demoEmail(ownerEmail: string, name: string) {
   return `${ownerEmail.slice(0, at)}+${tag}${ownerEmail.slice(at)}`;
 }
 
-/** 店のデータを消して、デモのデータで作り直す。作った客の ID を返す */
+/**
+ * 店のデータを消して、デモのデータで作り直す。作った客の ID を返す。
+ * 審査員向けのデモアカウントの店は、代金をサンドボックスのビジネスアカウント (DEMO_PAYEE_EMAIL) で受け取る
+ */
 export async function loadDemoShop(env: AppEnv, owner: { id: string; email: string }) {
   const db = getDb(env);
   const now = Date.now();
+  const payeeEmail = isDemoUser(owner) ? env.DEMO_PAYEE_EMAIL : owner.email;
   await db.delete(letter).where(eq(letter.userId, owner.id));
   await db.delete(purchase).where(eq(purchase.userId, owner.id));
   await db.delete(customer).where(eq(customer.userId, owner.id));
   await db.delete(product).where(eq(product.userId, owner.id));
   await db
     .insert(shop)
-    .values({ userId: owner.id, name: "Hoshizora Coffee", payeeEmail: owner.email, currency: "USD", shippingMinor: 1200 })
-    .onConflictDoUpdate({ target: shop.userId, set: { name: "Hoshizora Coffee", currency: "USD", shippingMinor: 1200 } });
+    .values({ userId: owner.id, name: "Hoshizora Coffee", payeeEmail, currency: "USD", shippingMinor: 1200 })
+    .onConflictDoUpdate({
+      target: shop.userId,
+      set: { name: "Hoshizora Coffee", currency: "USD", shippingMinor: 1200, ...(isDemoUser(owner) ? { payeeEmail } : {}) },
+    });
 
   const productIds = new Map<string, string>();
   const productRows = PRODUCTS.map((item) => {
@@ -153,4 +162,20 @@ export async function loadDemoShop(env: AppEnv, owner: { id: string; email: stri
   const [first, ...rest] = chunks;
   await db.batch([first, ...rest]);
   return customerIds;
+}
+
+/** デモの店を作り直し、客ごとの次のメールを AI に決めさせる。決められなかった客の数を返す */
+export async function loadAndPlanDemoShop(env: AppEnv, owner: { id: string; email: string }) {
+  const customerIds = await loadDemoShop(env, owner);
+  // 同意していない客は planFor が何も決めずに返す
+  const results = await Promise.allSettled(customerIds.map((id) => planFor(env, owner.id, id)));
+  const failed = results.filter((result) => result.status === "rejected");
+  for (const result of failed) console.error("デモの客のメールを決められませんでした:", result.reason);
+  return { customers: customerIds.length, failed: failed.length };
+}
+
+/** 審査員向けのデモアカウントに、店がまだなければデモの店を用意する */
+export async function prepareDemoShop(env: AppEnv, owner: { id: string; email: string }) {
+  const [existing] = await getDb(env).select({ userId: shop.userId }).from(shop).where(eq(shop.userId, owner.id)).limit(1);
+  if (!existing) await loadAndPlanDemoShop(env, owner);
 }

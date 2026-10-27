@@ -14,7 +14,11 @@
     "AUTH_EMAIL_FROM": "noreply@example.com",
     "LETTER_EMAIL_FROM": "letters@example.com",
     "PAYPAL_API_BASE": "https://api-m.sandbox.paypal.com",
-    "ANTHROPIC_MODEL": "claude-sonnet-5-5"
+    "ANTHROPIC_MODEL": "claude-sonnet-5-5",
+    // 審査員向けのデモアカウントの店が代金を受け取るアカウントと、払う側のアカウント (どちらも PayPal のサンドボックス)。
+    // 払う側のパスワードはデモの画面に出すが、値は wrangler secret put DEMO_SANDBOX_BUYER_PASSWORD で入れる
+    "DEMO_PAYEE_EMAIL": "sb-po432153561359@business.example.com",
+    "DEMO_SANDBOX_BUYER_EMAIL": "sb-xualy53547202@personal.example.com"
   },
   // `npx wrangler d1 create letterpay` で作った DB (APAC)
   "d1_databases": [

@@ -25,4 +25,9 @@ interface AppEnv {
   ANTHROPIC_API_KEY: string;
   /** メールのリンクに付ける署名の鍵 */
   LINK_SIGNING_SECRET: string;
+  /** 審査員向けのデモの店が代金を受け取る、PayPal のサンドボックスのビジネスアカウント */
+  DEMO_PAYEE_EMAIL: string;
+  /** デモで払う側に使う、PayPal のサンドボックスの個人アカウント (デモの画面に出す) */
+  DEMO_SANDBOX_BUYER_EMAIL: string;
+  DEMO_SANDBOX_BUYER_PASSWORD: string;
 }

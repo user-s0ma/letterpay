@@ -18,6 +18,7 @@ import {
   overrideLetter,
   replanCustomer,
   sendLetterNow,
+  type LetterPreview,
   type LetterRow,
 } from "@/lib/api-client";
 
@@ -29,6 +30,7 @@ export default function LettersPage() {
   const [confirm, confirmDialog] = useConfirm();
   const [open, setOpen] = useState<LetterRow | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [preview, setPreview] = useState<LetterPreview | null>(null);
 
   const shop = useQuery({ queryKey: ["shop"], queryFn: getShop });
   const letters = useQuery({ queryKey: ["letters"], queryFn: listLetters });
@@ -125,14 +127,48 @@ export default function LettersPage() {
           row={current}
           busy={busy}
           onClose={() => setOpen(null)}
-          onSend={(letterId) => void run(`send:${letterId}`, () => sendLetterNow(letterId), t("letters.sent"))}
+          onSend={(letterId) =>
+            void run(`send:${letterId}`, async () => {
+              const result = await sendLetterNow(letterId);
+              if (result.preview && result.sandboxBuyer) setPreview({ preview: result.preview, sandboxBuyer: result.sandboxBuyer });
+              else toast.success(t("letters.sent"));
+            })
+          }
           onReplan={(customerId) =>
             void run(`plan:${customerId}`, () => replanCustomer(customerId), t("letters.replanned"))
           }
         />
       )}
+      {preview && <LetterPreviewModal value={preview} onClose={() => setPreview(null)} />}
       {confirmDialog}
     </>
+  );
+}
+
+/** デモアカウントで「今すぐ送る」を押したときに、客に届くメールをそのまま見せる */
+function LetterPreviewModal({ value, onClose }: { value: LetterPreview; onClose: () => void }) {
+  const { t } = useTranslation();
+  const { preview, sandboxBuyer } = value;
+  // メールの中のリンクは新しいタブで開く
+  const html = preview.html.replace("<head>", '<head><base target="_blank" />');
+  return (
+    <Modal title={preview.subject} size="3xl" onClose={onClose}>
+      <div className="space-y-4 overflow-y-auto px-5 py-4">
+        <p className="text-sm text-ink-mute">{t("letters.preview.to", { email: preview.to })}</p>
+        <iframe
+          title={preview.subject}
+          srcDoc={html}
+          sandbox="allow-popups allow-popups-to-escape-sandbox"
+          className="h-[28rem] w-full rounded-(--radius-control) border border-line bg-white"
+        />
+        <p className="text-sm text-ink-soft">
+          {t("letters.preview.sandboxBuyer", { email: sandboxBuyer.email, password: sandboxBuyer.password })}
+        </p>
+        <a className="console-button-primary" href={preview.payUrl} target="_blank" rel="noreferrer">
+          {t("letters.preview.open")}
+        </a>
+      </div>
+    </Modal>
   );
 }
 

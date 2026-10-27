@@ -67,10 +67,6 @@
         "body": "Nothing is charged until the customer confirms the total in PayPal."
       }
     },
-    "demo": {
-      "title": "Try the demo",
-      "body": "Sign in and press “Load demo shop”. Emails go to your own inbox, and payments use the PayPal sandbox."
-    },
     "finalCta": {
       "title": "Turn your order history into the next order.",
       "cta": "Open the console"

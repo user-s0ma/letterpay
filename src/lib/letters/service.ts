@@ -1,6 +1,7 @@
 import { and, asc, desc, eq, inArray, isNull, lte, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
-import { customer, letter, product, purchase, shop } from "@/lib/db/schema";
+import { DEMO_EMAIL } from "@/lib/auth/demo-account";
+import { customer, letter, product, purchase, shop, user } from "@/lib/db/schema";
 import { captureOrder, createOrder } from "@/lib/paypal";
 import { renderLetterEmail } from "./email";
 import { planNextLetter, PlanRejected, writeReason, type PlannerContext } from "./planner";
@@ -167,7 +168,11 @@ function appUrl(env: Env) {
 }
 
 /** 1通送る。送る前に、同意・配信停止・在庫を確かめ直す */
-export async function sendLetter(env: Env, row: LetterRow) {
+/**
+ * 予定のメールを送る。"preview" のときは送らずに、送ったものとして記録し、届くメールの中身を返す
+ * (審査員向けのデモアカウントの客は宛先が実在しないため)
+ */
+export async function sendLetter(env: Env, row: LetterRow, mode: "email" | "preview" = "email") {
   const db = getDb(env);
   const [owner, person, item] = await Promise.all([
     loadShop(env, row.userId),
@@ -177,15 +182,20 @@ export async function sendLetter(env: Env, row: LetterRow) {
   const skip = async (error: string) => {
     await db.update(letter).set({ status: "canceled", error }).where(eq(letter.id, row.id));
   };
-  if (!person?.marketingConsentAt || person.unsubscribedAt) return skip("The customer does not receive emails");
+  if (!person?.marketingConsentAt || person.unsubscribedAt) {
+    await skip("The customer does not receive emails");
+    return { preview: null };
+  }
   if (!item?.active || item.stock < row.quantity) {
     // 在庫が足りなくなっていれば、今の商品の一覧で選び直す
     await skip("Out of stock when sending");
-    return planFor(env, row.userId, row.customerId);
+    await planFor(env, row.userId, row.customerId);
+    return { preview: null };
   }
 
   const base = appUrl(env);
   const unsubscribeUrl = `${base}/u/${await createLinkToken(env.LINK_SIGNING_SECRET, "unsubscribe", row.id)}`;
+  const payUrl = `${base}/l/${await createLinkToken(env.LINK_SIGNING_SECRET, "pay", row.id)}`;
   const message = renderLetterEmail({
     shopName: owner.name,
     customerName: person.name,
@@ -195,9 +205,14 @@ export async function sendLetter(env: Env, row: LetterRow) {
     unitMinor: item.priceMinor,
     shippingMinor: owner.shippingMinor,
     currency: owner.currency,
-    payUrl: `${base}/l/${await createLinkToken(env.LINK_SIGNING_SECRET, "pay", row.id)}`,
+    payUrl,
     unsubscribeUrl,
   });
+  if (mode === "preview") {
+    await db.update(letter).set({ status: "sent", sentAt: new Date(), error: null }).where(eq(letter.id, row.id));
+    await planFor(env, row.userId, row.customerId);
+    return { preview: { to: person.email, subject: message.subject, html: message.html, payUrl } };
+  }
   try {
     await env.EMAIL.send({
       // 送り元の名前は店の名前にする (客にとっての相手は店)
@@ -219,7 +234,8 @@ export async function sendLetter(env: Env, row: LetterRow) {
   }
   await db.update(letter).set({ status: "sent", sentAt: new Date(), error: null }).where(eq(letter.id, row.id));
   // 送ったら、その次をすぐに決める (買われたら planFor が作り直す)
-  return planFor(env, row.userId, row.customerId);
+  await planFor(env, row.userId, row.customerId);
+  return { preview: null };
 }
 
 /** 毎日の見回り: 送る日になった予定を送る */
@@ -227,7 +243,14 @@ export async function sendDueLetters(env: Env) {
   const due = await getDb(env)
     .select()
     .from(letter)
-    .where(and(eq(letter.status, "planned"), lte(letter.sendOn, utcDate())))
+    .where(
+      and(
+        eq(letter.status, "planned"),
+        lte(letter.sendOn, utcDate()),
+        // デモアカウントの店の客は宛先が実在しないので送らない
+        sql`${letter.userId} not in (select ${user.id} from ${user} where ${user.email} = ${DEMO_EMAIL})`,
+      ),
+    )
     .orderBy(asc(letter.sendOn));
   for (const row of due) {
     await sendLetter(env, row).catch((error) =>

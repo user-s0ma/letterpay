@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { DemoButton } from "@/components/account/DemoButton";
 import { Mail, PauseCircle, Receipt, ShieldCheck } from "lucide-react";
 import { SiteFooter, SiteHeader } from "@/components/landing/SiteChrome";
 
@@ -45,9 +46,12 @@ export default function Home() {
             {t("landing.hero.title")}
           </h1>
           <p className="mt-6 max-w-lg text-base leading-relaxed text-ink-soft sm:text-lg">{t("landing.hero.lead")}</p>
-          <a href="/app" className="ui-button-primary mt-8 inline-flex">
-            {t("landing.hero.cta")}
-          </a>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <DemoButton />
+            <a href="/app" className="ui-button-secondary">
+              {t("landing.hero.cta")}
+            </a>
+          </div>
         </div>
         <SampleEmail />
       </section>
@@ -84,13 +88,6 @@ export default function Home() {
               ))}
             </ul>
           </div>
-        </div>
-      </section>
-
-      <section className="border-t border-line bg-paper py-20">
-        <div className="ui-container max-w-3xl">
-          <h2 className="h-display text-2xl font-semibold tracking-[-0.02em]">{t("landing.demo.title")}</h2>
-          <p className="mt-3 text-base leading-7 text-ink-soft">{t("landing.demo.body")}</p>
         </div>
       </section>
 
