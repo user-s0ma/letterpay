@@ -32,18 +32,15 @@ export const product = sqliteTable(
     id: text("id").primaryKey(),
     userId: text("userId").notNull(),
     name: text("name").notNull(),
-    origin: text("origin").notNull(),
-    /** light / medium / dark */
-    roast: text("roast").notNull(),
-    /** 味の特徴 (店が書く文章) */
-    notes: text("notes").notNull(),
-    /** 1袋の量 (グラム) */
-    bagGrams: integer("bagGrams").notNull(),
-    /** 1袋の価格 (通貨の最小単位) */
+    /** 商品の説明 (店が書く文章)。AI はこれを読んで選ぶ */
+    description: text("description").notNull(),
+    /** 1個の量や形 (店が書く文章。例 "200 g bag"、"500 ml bottle") */
+    size: text("size").notNull(),
+    /** 1個の価格 (通貨の最小単位) */
     priceMinor: integer("priceMinor").notNull(),
-    /** 在庫 (袋) */
+    /** 在庫 (個) */
     stock: integer("stock").notNull(),
-    /** 入荷日 (新しい豆をすすめるときの手がかり) */
+    /** 入荷日 (新しい商品をすすめるときの手がかり) */
     arrivedOn: text("arrivedOn").notNull(),
     active: integer("active", { mode: "boolean" }).default(true).notNull(),
     createdAt: createdAt(),
@@ -82,9 +79,9 @@ export const purchase = sqliteTable(
     userId: text("userId").notNull(),
     customerId: text("customerId").notNull(),
     productId: text("productId").notNull(),
-    /** 袋の数 */
+    /** 個数 */
     quantity: integer("quantity").notNull(),
-    /** 1袋の価格 (買ったときの値) */
+    /** 1個の価格 (買ったときの値) */
     unitPriceMinor: integer("unitPriceMinor").notNull(),
     /** import / letterpay */
     source: text("source").notNull(),
@@ -125,7 +122,7 @@ export const letter = sqliteTable(
     /** メールのリンクを最初に開いた日時 */
     clickedAt: timestamp("clickedAt"),
     paidAt: timestamp("paidAt"),
-    /** 最後に作った PayPal の注文と、そのときの1袋の価格 */
+    /** 最後に作った PayPal の注文と、そのときの1個の価格 */
     paypalOrderId: text("paypalOrderId"),
     checkoutUnitMinor: integer("checkoutUnitMinor"),
     paypalCaptureId: text("paypalCaptureId"),

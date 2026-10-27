@@ -4,16 +4,14 @@ import { z } from "zod";
 
 /**
  * Claude が客ごとに「次にいつ、何を、いくつ、なぜすすめるか」を決める。
- * 決め打ちの決まり (○回買ったら新しい豆、など) は置かない。コードは答えを確かめるだけ (validatePlan)
+ * 決め打ちの決まり (○回買ったら新しい商品、など) は置かない。コードは答えを確かめるだけ (validatePlan)
  */
 
 export type PlannerProduct = {
   id: string;
   name: string;
-  origin: string;
-  roast: string;
-  notes: string;
-  bagGrams: number;
+  description: string;
+  size: string;
   priceMinor: number;
   stock: number;
   arrivedOn: string;
@@ -23,7 +21,7 @@ export type PlannerContext = {
   today: string;
   shop: { name: string; currency: string };
   customer: { name: string; country: string };
-  purchases: Array<{ date: string; productId: string; productName: string; quantity: number; bagGrams: number }>;
+  purchases: Array<{ date: string; productId: string; productName: string; quantity: number; size: string }>;
   letters: Array<{
     sentOn: string;
     productName: string;
@@ -39,22 +37,22 @@ const planSchema = z.object({
   sendOn: z.string().nullable().describe("YYYY-MM-DD. The day to send the next email. Null when action is stop."),
   timingReason: z.string().describe("One or two sentences for the shop owner: why this day (or why to stop)."),
   productId: z.string().nullable().describe("Id of the product to recommend. Null when action is stop."),
-  quantity: z.number().int().nullable().describe("Number of bags. Null when action is stop."),
+  quantity: z.number().int().nullable().describe("How many units of the product. Null when action is stop."),
   reason: z
     .string()
     .nullable()
-    .describe("Two or three sentences to the customer explaining why this coffee, based on their history. Null when action is stop."),
+    .describe("Two or three sentences to the customer explaining why this product, based on their history. Null when action is stop."),
 });
 
 export type Plan = z.infer<typeof planSchema>;
 
-const SYSTEM = `You plan follow-up emails for a small coffee roaster. Each email recommends one coffee and links straight to a PayPal checkout.
+const SYSTEM = `You plan follow-up emails for a small shop whose customers buy the same kinds of products again. Each email recommends one product and links straight to a PayPal checkout.
 
 For one customer you get their purchase history, the emails already sent and what happened to them, and the current product list. Decide:
 - when the next email should arrive: around when they are likely to run out, judging from how much they buy and how often. If they ignored recent emails, wait longer or decide to stop.
-- which coffee: their usual one, or a new one that fits what they have liked. Only recommend products that are in stock.
-- how many bags: the same number they usually buy.
-- the reason, written to the customer in a warm, plain voice. The email already opens with "Hi <first name>," and signs off with the shop name, so write only the body: no greeting, no sign-off. Refer to their actual history. No invented facts about the coffee beyond the product notes. Do not promise anything the shop has not offered: no reserved or set-aside bags, no roast or delivery dates, no discounts.
+- which product: their usual one, or a new one that fits what they have liked. Only recommend products that are in stock.
+- how many: the same number of units they usually buy.
+- the reason, written to the customer in a warm, plain voice. The email already opens with "Hi <first name>," and signs off with the shop name, so write only the body: no greeting, no sign-off. Refer to their actual history. No invented facts about the product beyond its description. Do not promise anything the shop has not offered: no reserved or set-aside stock, no production or delivery dates, no discounts.
 
 Write all text in English. Never schedule an email on or before today.`;
 
@@ -76,7 +74,7 @@ export function validatePlan(plan: Plan, context: PlannerContext): string | null
   if (plan.quantity !== usualQuantity(context)) {
     return `quantity must be the customer's usual quantity (${usualQuantity(context)})`;
   }
-  if (product.stock < plan.quantity) return `${product.name} has only ${product.stock} bags in stock`;
+  if (product.stock < plan.quantity) return `${product.name} has only ${product.stock} in stock`;
   if (!plan.reason?.trim()) return "reason is required";
   return null;
 }
@@ -115,7 +113,7 @@ export async function planNextLetter(
 }
 
 const reasonSchema = z.object({
-  reason: z.string().describe("Two or three sentences to the customer explaining why this coffee, based on their history."),
+  reason: z.string().describe("Two or three sentences to the customer explaining why this product, based on their history."),
 });
 
 /** 店の人が商品を差し替えたとき、その商品に合わせて理由を書き直す */
@@ -134,7 +132,7 @@ export async function writeReason(
     messages: [
       {
         role: "user",
-        content: `${JSON.stringify(context, null, 2)}\n\nThe shop owner chose to recommend ${product.name} (id ${product.id}), ${choice.quantity} bag(s). Write only the reason for this choice.`,
+        content: `${JSON.stringify(context, null, 2)}\n\nThe shop owner chose to recommend ${product.name} (id ${product.id}), quantity ${choice.quantity}. Write only the reason for this choice.`,
       },
     ],
     output_config: { effort: "medium", format: betaZodOutputFormat(reasonSchema) },

@@ -23,8 +23,8 @@ export default function OrdersPage() {
       { headerName: t("orders.columns.date"), field: "purchasedOn", width: 130, sort: "desc" },
       { headerName: t("orders.columns.customer"), field: "customerName", minWidth: 180, flex: 1 },
       { headerName: t("orders.columns.country"), field: "country", width: 110 },
-      { headerName: t("orders.columns.coffee"), field: "productName", minWidth: 220, flex: 1 },
-      { headerName: t("orders.columns.bags"), field: "quantity", width: 100, type: "numericColumn" },
+      { headerName: t("orders.columns.product"), field: "productName", minWidth: 220, flex: 1 },
+      { headerName: t("orders.columns.quantity"), field: "quantity", width: 100, type: "numericColumn" },
       {
         headerName: t("orders.columns.amount"),
         field: "amountMinor",

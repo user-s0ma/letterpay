@@ -62,14 +62,10 @@ export function loadDemo() {
 
 // ---------------------------------------------------------------- products
 
-export type Roast = "light" | "medium" | "dark";
-
 export type ProductInput = {
   name: string;
-  origin: string;
-  roast: Roast;
-  notes: string;
-  bagGrams: number;
+  description: string;
+  size: string;
   priceMinor: number;
   stock: number;
   arrivedOn: string;

@@ -9,13 +9,13 @@ const context: PlannerContext = {
   shop: { name: "Hoshizora Coffee", currency: "USD" },
   customer: { name: "Mia Thompson", country: "US" },
   purchases: [
-    { date: "2026-09-10", productId: "p1", productName: "Brazil Cerrado", quantity: 2, bagGrams: 200 },
-    { date: "2026-10-01", productId: "p1", productName: "Brazil Cerrado", quantity: 2, bagGrams: 200 },
+    { date: "2026-09-10", productId: "p1", productName: "Brazil Cerrado", quantity: 2, size: "200 g bag" },
+    { date: "2026-10-01", productId: "p1", productName: "Brazil Cerrado", quantity: 2, size: "200 g bag" },
   ],
   letters: [],
   products: [
-    { id: "p1", name: "Brazil Cerrado", origin: "Brazil", roast: "medium", notes: "Chocolate", bagGrams: 200, priceMinor: 1600, stock: 10, arrivedOn: "2026-03-01" },
-    { id: "p2", name: "Hawaii Kona", origin: "Hawaii", roast: "medium", notes: "Macadamia", bagGrams: 200, priceMinor: 3800, stock: 1, arrivedOn: "2026-10-21" },
+    { id: "p1", name: "Brazil Cerrado", description: "Brazil, medium roast. Chocolate.", size: "200 g bag", priceMinor: 1600, stock: 10, arrivedOn: "2026-03-01" },
+    { id: "p2", name: "Hawaii Kona", description: "Hawaii, medium roast. Macadamia.", size: "200 g bag", priceMinor: 3800, stock: 1, arrivedOn: "2026-10-21" },
   ],
 };
 
@@ -42,7 +42,7 @@ test("送る日は今日より後", () => {
 test("一覧にない商品・いつもと違う量・在庫の足りない商品は通さない", () => {
   assert.match(validatePlan(plan({ productId: "p9" }), context)!, /listed products/);
   assert.match(validatePlan(plan({ quantity: 3 }), context)!, /usual quantity \(2\)/);
-  assert.match(validatePlan(plan({ productId: "p2" }), context)!, /only 1 bags/);
+  assert.match(validatePlan(plan({ productId: "p2" }), context)!, /only 1 in stock/);
 });
 
 test("署名つきリンクは用途とメールの ID が合うときだけ読める", async () => {

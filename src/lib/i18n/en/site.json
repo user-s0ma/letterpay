@@ -14,7 +14,7 @@
       "tagline": "Recommendation emails your customers can pay from."
     },
     "og": {
-      "subtitle": "AI picks the coffee and the day. PayPal takes the payment."
+      "subtitle": "AI picks the product and the day. PayPal takes the payment."
     }
   },
   "auth": {
@@ -27,14 +27,14 @@
   "landing": {
     "hero": {
       "title": "The email is the checkout.",
-      "lead": "AI emails each customer the right coffee at the right time, with the reason. One tap opens PayPal checkout.",
+      "lead": "AI emails each customer the right product at the right time, with the reason. One tap opens PayPal checkout.",
       "cta": "Open the console"
     },
     "steps": {
       "title": "How it works",
       "s1": {
         "title": "AI reads the history",
-        "body": "Claude picks the day and the coffee from each customer's orders."
+        "body": "Claude picks the day and the product from each customer's orders."
       },
       "s2": {
         "title": "Code checks the plan",

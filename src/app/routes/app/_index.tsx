@@ -4,14 +4,13 @@ import { useTranslation } from "react-i18next";
 import { Mail, RefreshCw, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { LettersGrid, type LetterEdit } from "@/components/letters/LettersGrid";
-import { useAccountPage, useMoney } from "@/components/account/hooks";
+import { useAccountPage } from "@/components/account/hooks";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Modal } from "@/components/ui/Modal";
 import { PageBody, PageHeader } from "@/components/ui/PageHeader";
 import { useConfirm } from "@/components/ui/useConfirm";
 import {
   getCustomerHistory,
-  getShop,
   listLetters,
   listProducts,
   loadDemo,
@@ -32,10 +31,8 @@ export default function LettersPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [preview, setPreview] = useState<LetterPreview | null>(null);
 
-  const shop = useQuery({ queryKey: ["shop"], queryFn: getShop });
   const letters = useQuery({ queryKey: ["letters"], queryFn: listLetters });
   const products = useQuery({ queryKey: ["products"], queryFn: listProducts });
-  const money = useMoney(shop.data?.shop?.currency);
 
   const refresh = useCallback(async () => {
     await Promise.all([
@@ -115,7 +112,6 @@ export default function LettersPage() {
           <LettersGrid
             rows={rows}
             products={products.data?.items ?? []}
-            formatMoney={money}
             onEdit={onEdit}
             onOpen={setOpen}
           />
@@ -203,7 +199,7 @@ function CustomerPanel({
               <p>
                 <span className="font-medium">{planned.sendOn}</span> · {planned.productName} × {planned.quantity}
                 {planned.editedByOwner && (
-                  <span className="ml-2 text-xs text-signal">{t("letters.decidedBy.owner")}</span>
+                  <span className="ml-2 text-xs text-signal">{t("letters.editedByYou")}</span>
                 )}
               </p>
               <p className="text-ink-mute">

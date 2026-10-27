@@ -13,7 +13,7 @@ export type LetterEmailInput = {
   shopName: string;
   customerName: string;
   reason: string;
-  product: { name: string; origin: string; roast: string; notes: string; bagGrams: number };
+  product: { name: string; description: string; size: string };
   quantity: number;
   unitMinor: number;
   shippingMinor: number;
@@ -27,15 +27,15 @@ export function renderLetterEmail(input: LetterEmailInput) {
   const money = (minor: number) => formatMoney(minor, input.currency);
   const total = input.unitMinor * input.quantity + input.shippingMinor;
   const firstName = input.customerName.split(/\s+/)[0];
-  const subject = `${firstName}, a coffee picked for you: ${input.product.name}`;
-  const line = `${input.quantity} × ${input.product.bagGrams}g bag · ${money(input.unitMinor)} each`;
+  const subject = `${firstName}, picked for you: ${input.product.name}`;
+  const line = `${input.quantity} × ${input.product.size} · ${money(input.unitMinor)} each`;
   const text = [
     `Hi ${firstName},`,
     "",
     input.reason,
     "",
-    `${input.product.name} (${input.product.origin}, ${input.product.roast} roast)`,
-    input.product.notes,
+    input.product.name,
+    input.product.description,
     line,
     `Shipping ${money(input.shippingMinor)} · Total ${money(total)}`,
     "",
@@ -55,8 +55,7 @@ export function renderLetterEmail(input: LetterEmailInput) {
         <p style="margin:0 0 24px;font-size:16px;line-height:1.7;">${escapeHtml(input.reason)}</p>
         <div style="margin-bottom:24px;font-family:Arial,sans-serif;">
           <p style="margin:0 0 4px;font-size:18px;font-weight:700;">${escapeHtml(input.product.name)}</p>
-          <p style="margin:0 0 8px;font-size:13px;color:#7a6a5c;">${escapeHtml(input.product.origin)} · ${escapeHtml(input.product.roast)} roast</p>
-          <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#4a3f37;">${escapeHtml(input.product.notes)}</p>
+          <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#4a3f37;">${escapeHtml(input.product.description)}</p>
           <p style="margin:0;font-size:14px;">${escapeHtml(line)}</p>
           <p style="margin:4px 0 0;font-size:14px;">Shipping ${escapeHtml(money(input.shippingMinor))} · <strong>Total ${escapeHtml(money(total))}</strong></p>
         </div>

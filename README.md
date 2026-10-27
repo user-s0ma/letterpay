@@ -8,7 +8,7 @@ The demo shop, **Hoshizora Coffee**, is a fictional roaster in Japan that sells 
 
 ## How it works
 
-1. **AI plans the next email.** When a customer buys or an email is sent, Claude reads that customer's purchases (what, how much, how often), the emails already sent and what happened to them, and the current product list (roast, origin, tasting notes, arrival date, stock). It returns structured JSON: the day to send, the product, the quantity, a reason written to the customer, and a reason for the day for the shop owner. It can also decide to stop writing to someone.
+1. **AI plans the next email.** When a customer buys or an email is sent, Claude reads that customer's purchases (what, how much, how often), the emails already sent and what happened to them, and the current product list (name, description, size, price, arrival date, stock). It returns structured JSON: the day to send, the product, the quantity, a reason written to the customer, and a reason for the day for the shop owner. It can also decide to stop writing to someone.
 2. **Code checks the plan.** Before saving, Letterpay checks it against the shop: the date is after today, the product exists and is in stock, the quantity is what the customer usually buys. If a check fails, Claude is asked once more with the reason; if it fails again, nothing is planned.
 3. **A daily job sends what is due.** A Cloudflare Cron Trigger runs every day and sends planned emails whose day has come. Customers without recorded consent, or who unsubscribed, are never planned or emailed.
 4. **The link opens PayPal.** `GET /l/:token` verifies the signed link, creates an Orders v2 order (`intent: CAPTURE`, `shipping_preference: GET_FROM_FILE`, `user_action: PAY_NOW`) at the current price and redirects to the `payer-action` URL. The order is created on click, not when the email is sent, so prices are current and orders do not expire unused.
@@ -16,7 +16,7 @@ The demo shop, **Hoshizora Coffee**, is a fictional roaster in Japan that sells 
 
 ## The shop owner's console
 
-The main screen is an **AG Grid** table with one row per customer: consent, orders, the next email the AI planned (day, coffee, bags, reason, decided by AI or by you) and the result of the last email (sent, opened link, paid), plus revenue paid through emails. The day, coffee and quantity are editable in the grid; an edit gets the same checks, and when the coffee or quantity changes Claude rewrites the reason for the new choice. Products are also an editable AG Grid.
+The main screen is an **AG Grid** table with one row per customer: consent, orders, the next email the AI planned (day, product, quantity, reason, decided by AI or by you) and the result of the last email (sent, opened link, paid), plus revenue paid through emails. The day, product and quantity are editable in the grid; an edit gets the same checks, and when the product or quantity changes Claude rewrites the reason for the new choice. Products are also an editable AG Grid.
 
 ## Tech
 

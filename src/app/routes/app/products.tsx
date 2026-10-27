@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { Coffee, Plus } from "lucide-react";
+import { Package, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { AgGridReact } from "ag-grid-react";
 import type { CellValueChangedEvent, ColDef } from "ag-grid-community";
@@ -20,15 +20,11 @@ import {
 } from "@/lib/api-client";
 import { currencyDigits } from "@/lib/money";
 
-const ROASTS = ["light", "medium", "dark"] as const;
-
 function toInput(row: ProductRecord): ProductInput {
   return {
     name: row.name,
-    origin: row.origin,
-    roast: row.roast,
-    notes: row.notes,
-    bagGrams: row.bagGrams,
+    description: row.description,
+    size: row.size,
     priceMinor: row.priceMinor,
     stock: row.stock,
     arrivedOn: row.arrivedOn,
@@ -51,18 +47,8 @@ export default function ProductsPage() {
     const scale = currency ? 10 ** currencyDigits(currency) : 1;
     return [
       { headerName: t("products.columns.name"), field: "name", minWidth: 220, flex: 1, editable: true, pinned: "left" },
-      { headerName: t("products.columns.origin"), field: "origin", minWidth: 150, editable: true },
-      {
-        headerName: t("products.columns.roast"),
-        field: "roast",
-        width: 120,
-        editable: true,
-        cellEditor: "agSelectCellEditor",
-        cellEditorParams: { values: [...ROASTS] },
-        valueFormatter: (params) => t(`products.roast.${params.value}`),
-      },
-      { headerName: t("products.columns.notes"), field: "notes", minWidth: 280, flex: 2, editable: true, cellEditor: "agLargeTextCellEditor", cellEditorPopup: true },
-      { headerName: t("products.columns.bagGrams"), field: "bagGrams", width: 110, editable: true, type: "numericColumn" },
+      { headerName: t("products.columns.description"), field: "description", minWidth: 320, flex: 2, editable: true, cellEditor: "agLargeTextCellEditor", cellEditorPopup: true },
+      { headerName: t("products.columns.size"), field: "size", width: 130, editable: true },
       {
         headerName: t("products.columns.price"),
         colId: "price",
@@ -113,7 +99,7 @@ export default function ProductsPage() {
         {products.isPending ? (
           <div className="h-96 animate-pulse rounded-(--radius-panel) bg-paper" />
         ) : rows.length === 0 ? (
-          <EmptyState icon={Coffee} title={t("products.emptyTitle")} description={t("products.emptyDescription")} />
+          <EmptyState icon={Package} title={t("products.emptyTitle")} description={t("products.emptyDescription")} />
         ) : (
           <div className="h-[calc(100dvh-14rem)] min-h-[420px] w-full">
             <AgGridReact<ProductRecord>
@@ -156,10 +142,8 @@ function AddProduct({
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     name: "",
-    origin: "",
-    roast: "medium" as ProductInput["roast"],
-    notes: "",
-    bagGrams: "200",
+    description: "",
+    size: "",
     price: "",
     stock: "",
     arrivedOn: new Date().toISOString().slice(0, 10),
@@ -172,10 +156,8 @@ function AddProduct({
     try {
       await createProduct({
         name: form.name.trim(),
-        origin: form.origin.trim(),
-        roast: form.roast,
-        notes: form.notes.trim(),
-        bagGrams: Number(form.bagGrams),
+        description: form.description.trim(),
+        size: form.size.trim(),
         priceMinor: Math.round(Number(form.price) * 10 ** currencyDigits(currency)),
         stock: Number(form.stock),
         arrivedOn: form.arrivedOn,
@@ -200,20 +182,9 @@ function AddProduct({
     <Modal title={t("products.add")} onClose={onClose}>
       <form className="space-y-3" onSubmit={submit}>
         {field(t("products.columns.name"), <input className="console-input" required value={form.name} onChange={(e) => set({ name: e.target.value })} />)}
-        {field(t("products.columns.origin"), <input className="console-input" required value={form.origin} onChange={(e) => set({ origin: e.target.value })} />)}
-        {field(
-          t("products.columns.roast"),
-          <select className="console-input" value={form.roast} onChange={(e) => set({ roast: e.target.value as ProductInput["roast"] })}>
-            {ROASTS.map((roast) => (
-              <option key={roast} value={roast}>
-                {t(`products.roast.${roast}`)}
-              </option>
-            ))}
-          </select>,
-        )}
-        {field(t("products.columns.notes"), <textarea className="console-input min-h-20" required value={form.notes} onChange={(e) => set({ notes: e.target.value })} />)}
+        {field(t("products.columns.description"), <textarea className="console-input min-h-20" required value={form.description} onChange={(e) => set({ description: e.target.value })} />)}
         <div className="grid grid-cols-3 gap-3">
-          {field(t("products.columns.bagGrams"), <input className="console-input num" type="number" min={1} required value={form.bagGrams} onChange={(e) => set({ bagGrams: e.target.value })} />)}
+          {field(t("products.columns.size"), <input className="console-input" required placeholder={t("products.sizePlaceholder")} value={form.size} onChange={(e) => set({ size: e.target.value })} />)}
           {field(`${t("products.columns.price")} (${currency})`, <input className="console-input num" type="number" min={0} step="any" required value={form.price} onChange={(e) => set({ price: e.target.value })} />)}
           {field(t("products.columns.stock"), <input className="console-input num" type="number" min={0} required value={form.stock} onChange={(e) => set({ stock: e.target.value })} />)}
         </div>

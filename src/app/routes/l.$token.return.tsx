@@ -43,7 +43,7 @@ export default function PayReturn({ loaderData }: Route.ComponentProps) {
         <p className="mt-2">
           {pending
             ? "PayPal is still processing this payment. You will get a receipt from PayPal once it goes through, and we will ship to the address in your PayPal account."
-            : "We will roast and ship it to the address in your PayPal account. A receipt is on its way from PayPal."}
+            : "We will ship it to the address in your PayPal account. A receipt is on its way from PayPal."}
         </p>
       </LetterNotice>
     );

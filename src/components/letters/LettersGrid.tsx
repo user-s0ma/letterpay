@@ -6,7 +6,6 @@ import {
   themeQuartz,
   type CellValueChangedEvent,
   type ColDef,
-  type ColGroupDef,
   type ICellRendererParams,
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
@@ -32,7 +31,6 @@ export type LetterEdit = { sendOn: string; productId: string; quantity: number }
 type Props = {
   rows: LetterRow[];
   products: ProductRecord[];
-  formatMoney: (minor: number) => string;
   /** 予定の日・商品・量を直したとき。失敗したら表を読み直す */
   onEdit: (letterId: string, edit: LetterEdit) => void;
   onOpen: (row: LetterRow) => void;
@@ -40,14 +38,17 @@ type Props = {
 
 /**
  * 1行が客1人。AI が決めた次のメール (送る日・商品・量・理由) と、最後に送ったメールの結果を並べる。
- * 送る日・商品・量は表の中で直せる (店の人による上書き)
+ * 送る日・商品・量は表の中で直せる (店の人による上書き)。直した欄は色を変える。
+ * 同意・注文・売上は「詳しく」と注文の画面で見る
  */
-export function LettersGrid({ rows, products, formatMoney, onEdit, onOpen }: Props) {
+export function LettersGrid({ rows, products, onEdit, onOpen }: Props) {
   const { t } = useTranslation();
 
-  const columns = useMemo<(ColDef<LetterRow> | ColGroupDef<LetterRow>)[]>(() => {
+  const columns = useMemo<ColDef<LetterRow>[]>(() => {
     const productName = new Map(products.map((item) => [item.id, item.name]));
     const editable = (params: { data?: LetterRow }) => Boolean(params.data?.planned);
+    const edited = { "text-brand-ink font-semibold": (params: { data?: LetterRow }) => Boolean(params.data?.planned?.editedByOwner) };
+    const editedTooltip = (params: { data?: LetterRow }) => (params.data?.planned?.editedByOwner ? t("letters.editedByYou") : undefined);
     return [
       {
         headerName: t("letters.columns.customer"),
@@ -79,110 +80,82 @@ export function LettersGrid({ rows, products, formatMoney, onEdit, onOpen }: Pro
         ),
       },
       {
-        headerName: t("letters.columns.consent"),
-        colId: "consent",
-        width: 120,
-        valueGetter: (params) =>
-          params.data?.unsubscribed
+        headerName: t("letters.columns.sendOn"),
+        colId: "sendOn",
+        width: 140,
+        editable,
+        cellEditor: "agDateStringCellEditor",
+        cellClassRules: edited,
+        tooltipValueGetter: editedTooltip,
+        valueGetter: (params) => params.data?.planned?.sendOn ?? null,
+        valueSetter: (params) => {
+          if (!params.data.planned || !params.newValue) return false;
+          params.data.planned = { ...params.data.planned, sendOn: params.newValue };
+          return true;
+        },
+        // 送る予定がない理由: 配信停止、同意なし、AI が止めた
+        valueFormatter: (params) =>
+          params.value ??
+          (params.data?.unsubscribed
             ? t("letters.consent.unsubscribed")
-            : params.data?.consent
-              ? t("letters.consent.yes")
-              : t("letters.consent.no"),
+            : !params.data?.consent
+              ? t("letters.consent.no")
+              : params.data?.stoppedReason
+                ? t("letters.stopped")
+                : "—"),
       },
-      { headerName: t("letters.columns.purchases"), field: "purchases", width: 110, type: "numericColumn" },
-      { headerName: t("letters.columns.lastPurchase"), field: "lastPurchaseOn", width: 130 },
       {
-        headerName: t("letters.columns.next"),
-        children: [
-          {
-            headerName: t("letters.columns.sendOn"),
-            colId: "sendOn",
-            width: 140,
-            editable,
-            cellEditor: "agDateStringCellEditor",
-            valueGetter: (params) => params.data?.planned?.sendOn ?? null,
-            valueSetter: (params) => {
-              if (!params.data.planned || !params.newValue) return false;
-              params.data.planned = { ...params.data.planned, sendOn: params.newValue };
-              return true;
-            },
-            valueFormatter: (params) =>
-              params.value ?? (params.data?.stoppedReason ? t("letters.stopped") : "—"),
-          },
-          {
-            headerName: t("letters.columns.product"),
-            colId: "product",
-            minWidth: 220,
-            editable,
-            cellEditor: "agSelectCellEditor",
-            cellEditorParams: { values: products.filter((item) => item.active).map((item) => item.id) },
-            valueGetter: (params) => params.data?.planned?.productId ?? null,
-            valueSetter: (params) => {
-              if (!params.data.planned || !params.newValue) return false;
-              params.data.planned = { ...params.data.planned, productId: params.newValue };
-              return true;
-            },
-            valueFormatter: (params) => (params.value ? (productName.get(params.value) ?? "") : "—"),
-          },
-          {
-            headerName: t("letters.columns.quantity"),
-            colId: "quantity",
-            width: 90,
-            editable,
-            cellEditor: "agNumberCellEditor",
-            cellEditorParams: { min: 1, precision: 0 },
-            valueGetter: (params) => params.data?.planned?.quantity ?? null,
-            valueSetter: (params) => {
-              if (!params.data.planned || !params.newValue) return false;
-              params.data.planned = { ...params.data.planned, quantity: Number(params.newValue) };
-              return true;
-            },
-          },
-          {
-            headerName: t("letters.columns.decidedBy"),
-            colId: "decidedBy",
-            width: 110,
-            valueGetter: (params) =>
-              params.data?.planned
-                ? params.data.planned.editedByOwner
-                  ? t("letters.decidedBy.owner")
-                  : t("letters.decidedBy.ai")
-                : null,
-          },
-          {
-            headerName: t("letters.columns.reason"),
-            colId: "reason",
-            minWidth: 320,
-            flex: 1,
-            // 全文はツールチップと「詳しく」で見せ、表の行は1行に保つ
-            valueGetter: (params) => params.data?.planned?.reason ?? params.data?.stoppedReason ?? null,
-            tooltipValueGetter: (params) => params.value,
-          },
-        ],
+        headerName: t("letters.columns.product"),
+        colId: "product",
+        minWidth: 220,
+        editable,
+        cellEditor: "agSelectCellEditor",
+        cellEditorParams: { values: products.filter((item) => item.active).map((item) => item.id) },
+        cellClassRules: edited,
+        tooltipValueGetter: editedTooltip,
+        valueGetter: (params) => params.data?.planned?.productId ?? null,
+        valueSetter: (params) => {
+          if (!params.data.planned || !params.newValue) return false;
+          params.data.planned = { ...params.data.planned, productId: params.newValue };
+          return true;
+        },
+        valueFormatter: (params) => (params.value ? (productName.get(params.value) ?? "") : "—"),
+      },
+      {
+        headerName: t("letters.columns.quantity"),
+        colId: "quantity",
+        width: 90,
+        editable,
+        cellEditor: "agNumberCellEditor",
+        cellEditorParams: { min: 1, precision: 0 },
+        cellClassRules: edited,
+        tooltipValueGetter: editedTooltip,
+        valueGetter: (params) => params.data?.planned?.quantity ?? null,
+        valueSetter: (params) => {
+          if (!params.data.planned || !params.newValue) return false;
+          params.data.planned = { ...params.data.planned, quantity: Number(params.newValue) };
+          return true;
+        },
+      },
+      {
+        headerName: t("letters.columns.reason"),
+        colId: "reason",
+        minWidth: 240,
+        flex: 1,
+        // 全文はツールチップと「詳しく」で見せ、表の行は1行に保つ
+        valueGetter: (params) => params.data?.planned?.reason ?? params.data?.stoppedReason ?? null,
+        tooltipValueGetter: (params) => params.value,
       },
       {
         headerName: t("letters.columns.last"),
-        children: [
-          { headerName: t("letters.columns.sentOn"), colId: "sentOn", width: 120, valueGetter: (params) => params.data?.lastSent?.sentOn ?? null },
-          {
-            headerName: t("letters.columns.result"),
-            colId: "result",
-            width: 120,
-            valueGetter: (params) => params.data?.lastSent?.result ?? null,
-            valueFormatter: (params) => (params.value ? t(`letters.result.${params.value}`) : "—"),
-            cellClassRules: { "text-earn font-semibold": (params) => params.value === "paid" || params.value === "paidPending" },
-          },
-        ],
-      },
-      {
-        headerName: t("letters.columns.revenue"),
-        field: "letterpayRevenueMinor",
-        width: 150,
-        type: "numericColumn",
-        valueFormatter: (params) => (params.value ? formatMoney(params.value) : "—"),
+        colId: "result",
+        width: 170,
+        valueGetter: (params) => params.data?.lastSent?.result ?? null,
+        valueFormatter: (params) => (params.value ? t(`letters.result.${params.value}`) : "—"),
+        cellClassRules: { "text-earn font-semibold": (params) => params.value === "paid" || params.value === "paidPending" },
       },
     ];
-  }, [formatMoney, onOpen, products, t]);
+  }, [onOpen, products, t]);
 
   const onCellValueChanged = (event: CellValueChangedEvent<LetterRow>) => {
     const planned = event.data.planned;

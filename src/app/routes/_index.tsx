@@ -18,12 +18,13 @@ function SampleEmail() {
       <p className="font-serif text-[15px]">Hi Mia,</p>
       <p className="mt-2 font-serif text-[15px] leading-7 text-ink-soft">
         Your last two bags of Brazil Cerrado should be running low around now. It has been your steady pick since spring,
-        so here is the same again, roasted this week.
+        so here is the same again.
       </p>
       <div className="mt-4 border-t border-line pt-4 text-sm">
         <p className="font-semibold">Brazil Cerrado Natural</p>
-        <p className="mt-0.5 text-xs text-ink-mute">Brazil · medium roast · 2 × 200g</p>
-        <p className="num mt-2">
+        <p className="mt-0.5 text-xs text-ink-mute">Medium roast from Brazil. Milk chocolate, roasted almond and caramel.</p>
+        <p className="num mt-2">2 × 200 g bag · $16.00 each</p>
+        <p className="num mt-0.5">
           Shipping $12.00 · <span className="font-semibold">Total $44.00</span>
         </p>
       </div>

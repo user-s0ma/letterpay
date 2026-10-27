@@ -36,7 +36,7 @@ export async function loadPlannerContext(env: Env, userId: string, customerId: s
       .then((rows) => rows[0]),
     db.select().from(product).where(and(eq(product.userId, userId), eq(product.active, true))),
     db
-      .select({ purchase, productName: product.name, bagGrams: product.bagGrams })
+      .select({ purchase, productName: product.name, size: product.size })
       .from(purchase)
       .innerJoin(product, eq(product.id, purchase.productId))
       .where(eq(purchase.customerId, customerId))
@@ -58,7 +58,7 @@ export async function loadPlannerContext(env: Env, userId: string, customerId: s
       productId: row.purchase.productId,
       productName: row.productName,
       quantity: row.purchase.quantity,
-      bagGrams: row.bagGrams,
+      size: row.size,
     })),
     letters: letters.map((row) => ({
       sentOn: utcDate(row.letter.sentAt ?? row.letter.createdAt),
@@ -70,10 +70,8 @@ export async function loadPlannerContext(env: Env, userId: string, customerId: s
     products: products.map((row) => ({
       id: row.id,
       name: row.name,
-      origin: row.origin,
-      roast: row.roast,
-      notes: row.notes,
-      bagGrams: row.bagGrams,
+      description: row.description,
+      size: row.size,
       priceMinor: row.priceMinor,
       stock: row.stock,
       arrivedOn: row.arrivedOn,
@@ -150,7 +148,7 @@ export async function overrideLetter(
     .where(and(eq(product.userId, userId), eq(product.id, input.productId), eq(product.active, true)))
     .limit(1);
   if (!item) throw new LetterError("Product not found");
-  if (item.stock < input.quantity) throw new LetterError(`${item.name} has only ${item.stock} bags in stock`);
+  if (item.stock < input.quantity) throw new LetterError(`${item.name} has only ${item.stock} in stock`);
 
   // 商品か量が変われば、AI の理由が合わなくなるので書き直す
   const reason =
@@ -295,7 +293,7 @@ export async function startCheckout(env: Env, letterId: string) {
       currency: owner.currency,
       item: {
         name: item.name,
-        description: `${item.origin}, ${item.roast} roast, ${item.bagGrams}g`.slice(0, 127),
+        description: `${item.size} · ${item.description}`.slice(0, 127),
         sku: item.id,
         quantity: row.quantity,
         unitMinor: item.priceMinor,

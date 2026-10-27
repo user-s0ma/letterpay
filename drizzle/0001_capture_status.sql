@@ -1,1 +1,0 @@
-ALTER TABLE `Letter` ADD `paypalCaptureStatus` text;

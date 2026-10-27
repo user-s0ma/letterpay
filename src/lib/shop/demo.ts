@@ -14,10 +14,8 @@ const DAY = 24 * 60 * 60 * 1000;
 type DemoProduct = {
   key: string;
   name: string;
-  origin: string;
-  roast: "light" | "medium" | "dark";
-  notes: string;
-  bagGrams: number;
+  description: string;
+  size: string;
   priceMinor: number;
   stock: number;
   /** 何日前に入荷したか */
@@ -26,13 +24,13 @@ type DemoProduct = {
 
 // 定番の豆は履歴の始まりより前 (240日前) に入荷している。新しい豆 (Huila、Kona) は最近入荷した
 const PRODUCTS: DemoProduct[] = [
-  { key: "yirgacheffe", name: "Ethiopia Yirgacheffe Kochere", origin: "Ethiopia", roast: "light", notes: "Jasmine, bergamot and lemon. Light body, bright finish.", bagGrams: 200, priceMinor: 1900, stock: 40, arrivedDaysAgo: 240 },
-  { key: "huila", name: "Colombia Huila Pink Bourbon", origin: "Colombia", roast: "light", notes: "Red grape, hibiscus and brown sugar. Juicy and sweet.", bagGrams: 200, priceMinor: 2200, stock: 18, arrivedDaysAgo: 9 },
-  { key: "cerrado", name: "Brazil Cerrado Natural", origin: "Brazil", roast: "medium", notes: "Milk chocolate, roasted almond and caramel. Round and low in acidity.", bagGrams: 200, priceMinor: 1600, stock: 60, arrivedDaysAgo: 240 },
-  { key: "antigua", name: "Guatemala Antigua", origin: "Guatemala", roast: "medium", notes: "Cocoa, orange peel and honey. Balanced with a clean finish.", bagGrams: 200, priceMinor: 1800, stock: 35, arrivedDaysAgo: 240 },
-  { key: "kona", name: "Hawaii Kona Extra Fancy", origin: "Hawaii", roast: "medium", notes: "Macadamia, butter and soft citrus. Smooth and gentle.", bagGrams: 200, priceMinor: 3800, stock: 6, arrivedDaysAgo: 5 },
-  { key: "mandheling", name: "Sumatra Mandheling", origin: "Indonesia", roast: "dark", notes: "Dark chocolate, cedar and spice. Heavy body, long finish.", bagGrams: 200, priceMinor: 1700, stock: 45, arrivedDaysAgo: 240 },
-  { key: "hoshizora", name: "Hoshizora House Blend", origin: "Brazil, Colombia and Indonesia", roast: "dark", notes: "Bittersweet chocolate and toasted nuts. Made for milk drinks.", bagGrams: 400, priceMinor: 2600, stock: 50, arrivedDaysAgo: 240 },
+  { key: "yirgacheffe", name: "Ethiopia Yirgacheffe Kochere", description: "Light roast from Ethiopia. Jasmine, bergamot and lemon. Light body, bright finish.", size: "200 g bag", priceMinor: 1900, stock: 40, arrivedDaysAgo: 240 },
+  { key: "huila", name: "Colombia Huila Pink Bourbon", description: "Light roast from Colombia. Red grape, hibiscus and brown sugar. Juicy and sweet.", size: "200 g bag", priceMinor: 2200, stock: 18, arrivedDaysAgo: 9 },
+  { key: "cerrado", name: "Brazil Cerrado Natural", description: "Medium roast from Brazil. Milk chocolate, roasted almond and caramel. Round and low in acidity.", size: "200 g bag", priceMinor: 1600, stock: 60, arrivedDaysAgo: 240 },
+  { key: "antigua", name: "Guatemala Antigua", description: "Medium roast from Guatemala. Cocoa, orange peel and honey. Balanced with a clean finish.", size: "200 g bag", priceMinor: 1800, stock: 35, arrivedDaysAgo: 240 },
+  { key: "kona", name: "Hawaii Kona Extra Fancy", description: "Medium roast from Hawaii. Macadamia, butter and soft citrus. Smooth and gentle.", size: "200 g bag", priceMinor: 3800, stock: 6, arrivedDaysAgo: 5 },
+  { key: "mandheling", name: "Sumatra Mandheling", description: "Dark roast from Indonesia. Dark chocolate, cedar and spice. Heavy body, long finish.", size: "200 g bag", priceMinor: 1700, stock: 45, arrivedDaysAgo: 240 },
+  { key: "hoshizora", name: "Hoshizora House Blend", description: "Dark roast blend of Brazil, Colombia and Indonesia. Bittersweet chocolate and toasted nuts. Made for milk drinks.", size: "400 g bag", priceMinor: 2600, stock: 50, arrivedDaysAgo: 240 },
 ];
 
 type Persona = {
@@ -105,10 +103,8 @@ export async function loadDemoShop(env: AppEnv, owner: { id: string; email: stri
       id,
       userId: owner.id,
       name: item.name,
-      origin: item.origin,
-      roast: item.roast,
-      notes: item.notes,
-      bagGrams: item.bagGrams,
+      description: item.description,
+      size: item.size,
       priceMinor: item.priceMinor,
       stock: item.stock,
       arrivedOn: new Date(now - item.arrivedDaysAgo * DAY).toISOString().slice(0, 10),

@@ -16,7 +16,7 @@
   },
   "letters": {
     "title": "Emails",
-    "description": "Change the day, coffee or quantity in the table.",
+    "description": "Change the day, product or quantity in the table.",
     "demo": "Load demo shop",
     "demoLoading": "Planning…",
     "demoLoaded": "Demo shop loaded",
@@ -32,28 +32,16 @@
     "open": "Details",
     "columns": {
       "customer": "Customer",
-      "consent": "Consent",
-      "purchases": "Orders",
-      "lastPurchase": "Last order",
-      "next": "Next email",
-      "sendOn": "Send on",
-      "product": "Coffee",
-      "quantity": "Bags",
-      "decidedBy": "Decided by",
-      "reason": "Reason",
-      "last": "Last email",
-      "sentOn": "Sent on",
-      "result": "Result",
-      "revenue": "Revenue"
+      "sendOn": "Next email",
+      "product": "Product",
+      "quantity": "Qty",
+      "reason": "Why",
+      "last": "Last email"
     },
     "consent": {
       "yes": "Agreed",
       "no": "No consent",
       "unsubscribed": "Unsubscribed"
-    },
-    "decidedBy": {
-      "ai": "AI",
-      "owner": "You"
     },
     "result": {
       "sent": "Sent",
@@ -75,7 +63,8 @@
       "to": "To {{email}}",
       "sandboxBuyer": "PayPal sandbox buyer: {{email}} / {{password}}",
       "open": "Pay with PayPal"
-    }
+    },
+    "editedByYou": "Changed by you"
   },
   "orders": {
     "title": "Orders",
@@ -87,8 +76,8 @@
       "date": "Date",
       "customer": "Customer",
       "country": "Country",
-      "coffee": "Coffee",
-      "bags": "Bags",
+      "product": "Product",
+      "quantity": "Qty",
       "amount": "Amount",
       "source": "Source"
     },
@@ -99,27 +88,21 @@
   },
   "products": {
     "title": "Products",
-    "description": "Edit price, stock and notes in the table.",
+    "description": "Edit price, stock and description in the table.",
     "add": "Add product",
     "saved": "Saved",
     "created": "Product added",
     "emptyTitle": "No products yet",
     "emptyDescription": "Add a product, or load the demo shop from Emails.",
+    "sizePlaceholder": "500 ml bottle",
     "columns": {
       "name": "Name",
-      "origin": "Origin",
-      "roast": "Roast",
-      "notes": "Tasting notes",
-      "bagGrams": "Bag (g)",
+      "description": "Description",
+      "size": "Size",
       "price": "Price",
       "stock": "Stock",
       "arrivedOn": "Arrived",
       "active": "On sale"
-    },
-    "roast": {
-      "light": "Light",
-      "medium": "Medium",
-      "dark": "Dark"
     }
   },
   "settings": {

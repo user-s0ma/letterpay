@@ -57,10 +57,8 @@ const shopSchema = z.object({
 
 const productSchema = z.object({
   name: z.string().trim().min(1).max(120),
-  origin: z.string().trim().min(1).max(120),
-  roast: z.enum(["light", "medium", "dark"]),
-  notes: z.string().trim().min(1).max(1000),
-  bagGrams: z.number().int().min(1),
+  description: z.string().trim().min(1).max(1000),
+  size: z.string().trim().min(1).max(60),
   priceMinor: z.number().int().min(1),
   stock: z.number().int().min(0),
   arrivedOn: z.iso.date(),
