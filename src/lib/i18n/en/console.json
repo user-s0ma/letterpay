@@ -57,7 +57,8 @@
       "replan": "Replan",
       "purchases": "Orders",
       "letters": "Emails sent",
-      "noLetters": "No emails yet."
+      "noLetters": "No emails yet.",
+      "sentDemo": "Sent \"{{subject}}\". The demo does not deliver email, so pay as the customer here:"
     },
     "preview": {
       "to": "To {{email}}",

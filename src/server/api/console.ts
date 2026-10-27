@@ -10,6 +10,7 @@ import {
   LetterError,
   listLetterRows,
   listPurchaseRows,
+  previewLetter,
   loadPlannerContext,
   overrideLetter,
   planFor,
@@ -139,6 +140,21 @@ console_.put("/letters/:id", async (c) => {
     return failure(c, error);
   }
   return c.json({ ok: true });
+});
+
+/** 予定のメールを、送らずに見る */
+console_.get("/letters/:id/preview", async (c) => {
+  const [row] = await getDb(c.env)
+    .select()
+    .from(letter)
+    .where(and(eq(letter.userId, currentUser(c).id), eq(letter.id, c.req.param("id")), eq(letter.status, "planned")))
+    .limit(1);
+  if (!row) return c.json({ message: "Planned email not found" }, 404);
+  try {
+    return c.json(await previewLetter(c.env, row));
+  } catch (error) {
+    return failure(c, error);
+  }
 });
 
 /** 予定のメールを今すぐ送る (デモで、送る日を待たずに流れを見せる) */

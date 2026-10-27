@@ -165,32 +165,23 @@ function appUrl(env: Env) {
   return env.VITE_PUBLIC_APP_URL.replace(/\/$/, "");
 }
 
-/** 1通送る。送る前に、同意・配信停止・在庫を確かめ直す */
-/**
- * 予定のメールを送る。"preview" のときは送らずに、送ったものとして記録し、届くメールの中身を返す
- * (審査員向けのデモアカウントの客は宛先が実在しないため)
- */
-export async function sendLetter(env: Env, row: LetterRow, mode: "email" | "preview" = "email") {
+/** メールに要るもの (店・客・商品) を読む */
+async function loadLetterParts(env: Env, row: LetterRow) {
   const db = getDb(env);
   const [owner, person, item] = await Promise.all([
     loadShop(env, row.userId),
     db.select().from(customer).where(eq(customer.id, row.customerId)).limit(1).then((rows) => rows[0]),
     db.select().from(product).where(eq(product.id, row.productId)).limit(1).then((rows) => rows[0]),
   ]);
-  const skip = async (error: string) => {
-    await db.update(letter).set({ status: "canceled", error }).where(eq(letter.id, row.id));
-  };
-  if (!person?.marketingConsentAt || person.unsubscribedAt) {
-    await skip("The customer does not receive emails");
-    return { preview: null };
-  }
-  if (!item?.active || item.stock < row.quantity) {
-    // 在庫が足りなくなっていれば、今の商品の一覧で選び直す
-    await skip("Out of stock when sending");
-    await planFor(env, row.userId, row.customerId);
-    return { preview: null };
-  }
+  return { owner, person, item };
+}
 
+/** 客に届くメールを組み立てる。リンクは、そのメールに署名したもの */
+async function composeLetter(
+  env: Env,
+  row: LetterRow,
+  { owner, person, item }: { owner: Awaited<ReturnType<typeof loadShop>>; person: typeof customer.$inferSelect; item: typeof product.$inferSelect },
+) {
   const base = appUrl(env);
   const unsubscribeUrl = `${base}/u/${await createLinkToken(env.LINK_SIGNING_SECRET, "unsubscribe", row.id)}`;
   const payUrl = `${base}/l/${await createLinkToken(env.LINK_SIGNING_SECRET, "pay", row.id)}`;
@@ -206,6 +197,40 @@ export async function sendLetter(env: Env, row: LetterRow, mode: "email" | "prev
     payUrl,
     unsubscribeUrl,
   });
+  return { message, payUrl, unsubscribeUrl };
+}
+
+/** 予定のメールを、送らずに見せる (店の人が「詳しく」で見る) */
+export async function previewLetter(env: Env, row: LetterRow) {
+  const parts = await loadLetterParts(env, row);
+  if (!parts.person || !parts.item) throw new Error("Customer or product not found");
+  const { message } = await composeLetter(env, row, { owner: parts.owner, person: parts.person, item: parts.item });
+  return { to: parts.person.email, subject: message.subject, html: message.html };
+}
+
+/**
+ * 予定のメールを送る。送る前に、同意・配信停止・在庫を確かめ直す。
+ * "preview" のときは送らずに、送ったものとして記録し、届くメールの中身を返す
+ * (審査員向けのデモアカウントの客は宛先が実在しないため)
+ */
+export async function sendLetter(env: Env, row: LetterRow, mode: "email" | "preview" = "email") {
+  const db = getDb(env);
+  const { owner, person, item } = await loadLetterParts(env, row);
+  const skip = async (error: string) => {
+    await db.update(letter).set({ status: "canceled", error }).where(eq(letter.id, row.id));
+  };
+  if (!person?.marketingConsentAt || person.unsubscribedAt) {
+    await skip("The customer does not receive emails");
+    return { preview: null };
+  }
+  if (!item?.active || item.stock < row.quantity) {
+    // 在庫が足りなくなっていれば、今の商品の一覧で選び直す
+    await skip("Out of stock when sending");
+    await planFor(env, row.userId, row.customerId);
+    return { preview: null };
+  }
+
+  const { message, payUrl, unsubscribeUrl } = await composeLetter(env, row, { owner, person, item });
   if (mode === "preview") {
     await db.update(letter).set({ status: "sent", sentAt: new Date(), error: null }).where(eq(letter.id, row.id));
     await planFor(env, row.userId, row.customerId);

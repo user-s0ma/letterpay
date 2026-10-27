@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 const SIZE_CLASSES = {
   md: "max-w-md",
   "3xl": "max-w-3xl",
+  "5xl": "max-w-5xl",
 } as const;
 
 type ModalProps = {

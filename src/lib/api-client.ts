@@ -98,6 +98,11 @@ export function overrideLetter(id: string, input: { sendOn: string; productId: s
   return apiRequest<{ ok: true }>(`/api/letters/${encodeURIComponent(id)}`, send("PUT", input));
 }
 
+/** 予定のメールを、送らずに見る */
+export function getLetterPreview(id: string) {
+  return apiRequest<{ to: string; subject: string; html: string }>(`/api/letters/${encodeURIComponent(id)}/preview`);
+}
+
 /** デモアカウントでは送らずに、届くメールの中身と、払う側のサンドボックスのアカウントが返る */
 export type LetterPreview = {
   preview: { to: string; subject: string; html: string; payUrl: string };
