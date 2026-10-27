@@ -18,6 +18,7 @@ import {
   type ProductInput,
   type ProductRecord,
 } from "@/lib/api-client";
+import { isDemoUser } from "@/lib/auth/demo-account";
 import { currencyDigits } from "@/lib/money";
 
 function toInput(row: ProductRecord): ProductInput {
@@ -35,7 +36,9 @@ function toInput(row: ProductRecord): ProductInput {
 /** 商品の一覧。価格・在庫・販売中かは表の中で直せる。AI はこの一覧からすすめる */
 export default function ProductsPage() {
   const { t } = useTranslation();
-  const { openMobileNavigation } = useAccountPage();
+  const { openMobileNavigation, user } = useAccountPage();
+  // デモアカウントは共有なので、商品は見るだけ
+  const demo = isDemoUser(user);
   const queryClient = useQueryClient();
   const [adding, setAdding] = useState(false);
   const shop = useQuery({ queryKey: ["shop"], queryFn: getShop });
@@ -46,14 +49,15 @@ export default function ProductsPage() {
   const columns = useMemo<ColDef<ProductRecord>[]>(() => {
     const scale = currency ? 10 ** currencyDigits(currency) : 1;
     return [
-      { headerName: t("products.columns.name"), field: "name", minWidth: 220, flex: 1, editable: true, pinned: "left" },
-      { headerName: t("products.columns.description"), field: "description", minWidth: 320, flex: 2, editable: true, cellEditor: "agLargeTextCellEditor", cellEditorPopup: true },
-      { headerName: t("products.columns.size"), field: "size", width: 130, editable: true },
+      { headerName: t("products.columns.name"), field: "name", minWidth: 220, flex: 1, editable: !demo, pinned: "left" },
+      { headerName: t("products.columns.description"), field: "description", minWidth: 320, flex: 2, editable: !demo, cellEditor: "agLargeTextCellEditor", cellEditorPopup: true },
+      { headerName: t("products.columns.size"), field: "size", width: 130, editable: !demo },
       {
         headerName: t("products.columns.price"),
         colId: "price",
         width: 120,
-        editable: true,
+        // 通貨が分かるまでは、打った値を最小単位に直せない
+        editable: !demo && Boolean(currency),
         type: "numericColumn",
         cellEditor: "agNumberCellEditor",
         valueGetter: (params) => (params.data ? params.data.priceMinor / scale : null),
@@ -65,11 +69,11 @@ export default function ProductsPage() {
         },
         valueFormatter: (params) => (params.data ? money(params.data.priceMinor) : ""),
       },
-      { headerName: t("products.columns.stock"), field: "stock", width: 100, editable: true, type: "numericColumn" },
-      { headerName: t("products.columns.arrivedOn"), field: "arrivedOn", width: 140, editable: true, cellEditor: "agDateStringCellEditor" },
-      { headerName: t("products.columns.active"), field: "active", width: 110, editable: true },
+      { headerName: t("products.columns.stock"), field: "stock", width: 100, editable: !demo, type: "numericColumn" },
+      { headerName: t("products.columns.arrivedOn"), field: "arrivedOn", width: 140, editable: !demo, cellEditor: "agDateStringCellEditor" },
+      { headerName: t("products.columns.active"), field: "active", width: 110, editable: !demo },
     ];
-  }, [currency, money, t]);
+  }, [currency, demo, money, t]);
 
   const onCellValueChanged = async (event: CellValueChangedEvent<ProductRecord>) => {
     try {
@@ -86,13 +90,15 @@ export default function ProductsPage() {
     <>
       <PageHeader
         title={t("products.title")}
-        description={t("products.description")}
+        description={demo ? t("common.demoReadOnly") : t("products.description")}
         onOpenMenu={openMobileNavigation}
         actions={
-          <button className="console-button-primary" type="button" disabled={!currency} onClick={() => setAdding(true)}>
-            <Plus className="h-4 w-4" />
-            {t("products.add")}
-          </button>
+          !demo && (
+            <button className="console-button-primary" type="button" disabled={!currency} onClick={() => setAdding(true)}>
+              <Plus className="h-4 w-4" />
+              {t("products.add")}
+            </button>
+          )
         }
       />
       <PageBody>

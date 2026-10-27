@@ -137,8 +137,6 @@ export type CaptureResult = {
   /** PENDING のときの理由 (UNILATERAL など) */
   pendingReason: string | null;
   amountMinor: number;
-  /** 注文を作ったときに付けたメールの ID */
-  customId: string | null;
 };
 
 type CaptureBody = {
@@ -146,12 +144,12 @@ type CaptureBody = {
   status: string;
   status_details?: { reason?: string };
   amount: { value: string; currency_code: string };
-  custom_id?: string;
 };
 
 type OrderBody = {
   status: string;
-  purchase_units?: Array<{ payments?: { captures?: CaptureBody[] } }>;
+  links?: Link[];
+  purchase_units?: Array<{ custom_id?: string; payments?: { captures?: CaptureBody[] } }>;
 };
 
 /** 注文の最初の capture。まだ代金を受け取っていなければ null */
@@ -163,7 +161,16 @@ function firstCapture(order: OrderBody): CaptureResult | null {
     status: capture.status,
     pendingReason: capture.status_details?.reason ?? null,
     amountMinor: Math.round(Number(capture.amount.value) * 10 ** currencyDigits(capture.amount.currency_code)),
-    customId: capture.custom_id ?? null,
+  };
+}
+
+/** 注文の今の状態と、注文を作ったときに付けたメールの ID、まだ払っていなければ支払い画面の URL */
+export async function getOrder(env: PayPalEnv, orderId: string) {
+  const order = await call<OrderBody>(env, `/v2/checkout/orders/${encodeURIComponent(orderId)}`, { method: "GET" });
+  return {
+    status: order.status,
+    customId: order.purchase_units?.[0]?.custom_id ?? null,
+    approveUrl: order.links?.find((link) => link.rel === "payer-action")?.href ?? null,
   };
 }
 
@@ -179,5 +186,6 @@ export async function captureOrder(env: PayPalEnv, orderId: string) {
     // 前に受け取り済み (戻りの画面を開き直したときなど) なら、注文を読んで結果を返す
     if (!(error instanceof PayPalError && error.issue === "ORDER_ALREADY_CAPTURED")) throw error;
   }
-  return firstCapture(await call<OrderBody>(env, path, { method: "GET" }));
+  const order = await call<OrderBody>(env, path, { method: "GET" });
+  return { capture: firstCapture(order), customId: order.purchase_units?.[0]?.custom_id ?? null };
 }

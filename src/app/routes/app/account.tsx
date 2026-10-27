@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { LogOut, Menu, Trash2 } from "lucide-react";
+import { LogOut, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth/client";
+import { isDemoUser } from "@/lib/auth/demo-account";
+import { PageBody, PageHeader } from "@/components/ui/PageHeader";
 import type { AppLayoutContext } from "./_layout";
 
 export default function AccountPage() {
@@ -21,6 +23,8 @@ export default function AccountPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const busy = isSaving || isSigningOut || isDeleting;
+  // デモアカウントは共有なので、名前の変更と削除はサーバーが断る。画面にも出さない
+  const demo = isDemoUser(user);
   const trimmedName = name.trim();
   const canSave = Boolean(trimmedName) && trimmedName !== user.name;
 
@@ -84,23 +88,10 @@ export default function AccountPage() {
 
   return (
     <>
-      <header className="sticky top-0 z-20 h-16 border-b border-line bg-surface">
-        <div className="flex h-full items-center justify-between gap-2 px-2">
-          <div className="flex min-w-0 flex-1 items-center gap-2">
-            <button
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-ink-mute hover:bg-paper hover:text-ink lg:hidden"
-              type="button"
-              aria-label={t("common.openMenu")}
-              onClick={openMobileNavigation}
-            >
-              <Menu className="h-4 w-4" />
-            </button>
-            <span className="truncate text-sm mx-2">{t("account.title")}</span>
-          </div>
-        </div>
-      </header>
-      <main className="w-full">
-        <div className="mx-auto max-w-2xl space-y-4 px-4 py-6">
+      <PageHeader title={t("account.title")} onOpenMenu={openMobileNavigation} />
+      <PageBody>
+        <div className="max-w-2xl space-y-4">
+          {!demo && (
           <section className="console-panel p-5">
             <h2 className="text-sm font-semibold">{t("appShell.profile")}</h2>
             <form className="mt-4 space-y-4" onSubmit={handleSave}>
@@ -136,6 +127,7 @@ export default function AccountPage() {
               </div>
             </form>
           </section>
+          )}
 
           <button
             className="console-button-secondary"
@@ -149,6 +141,7 @@ export default function AccountPage() {
               : t("common.logout")}
           </button>
 
+          {!demo && (
           <section id="delete" className="console-panel p-5">
             <h2 className="text-sm font-semibold text-danger">
               {t("account.deleteTitle")}
@@ -182,8 +175,9 @@ export default function AccountPage() {
               </div>
             </form>
           </section>
+          )}
         </div>
-      </main>
+      </PageBody>
     </>
   );
 }

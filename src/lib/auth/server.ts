@@ -63,13 +63,11 @@ function renderEmail({
   return { text, html };
 }
 
-/** Turnstile を外すのは、キーが空で、しかも http:// (手元) のときだけ */
+/** 手元 (http://localhost) では Turnstile を使わない。公開先では必ず使う */
 export function turnstileDisabled(env: Pick<AppEnv, "TURNSTILE_SECRET_KEY">, baseURL: string) {
-  if (env.TURNSTILE_SECRET_KEY?.trim()) return false;
-  if (!baseURL.startsWith("http://")) {
-    throw new Error("TURNSTILE_SECRET_KEY is not set");
-  }
-  return true;
+  if (baseURL.startsWith("http://localhost")) return true;
+  if (!env.TURNSTILE_SECRET_KEY?.trim()) throw new Error("TURNSTILE_SECRET_KEY is not set");
+  return false;
 }
 
 /** デモアカウントでも使える認証の経路。ほかの経路 (パスワードやメールの変更、退会、セッションの一覧・取り消し) は止める */
@@ -201,7 +199,7 @@ function createAuth(env: AppEnv, requestOrigin?: string) {
     },
     plugins: [
       demoSignIn(env),
-      // 手元の開発 (http://) では TURNSTILE_SECRET_KEY を空にすれば外せる。公開先 (https://) では必ず使う
+      // 手元 (http://localhost) では外す。公開先では必ず使う
       captcha({
         provider: "cloudflare-turnstile",
         allowedHostnames: [new URL(baseURL).hostname],

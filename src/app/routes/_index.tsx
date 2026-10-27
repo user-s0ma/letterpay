@@ -35,6 +35,40 @@ function SampleEmail() {
   );
 }
 
+/** 「すべての判断が1つの表に」の横に置く、メールの表の見本 (デモの店の例) */
+const SAMPLE_ROWS = [
+  ["Mia Thompson", "Oct 30", "Brazil Cerrado Natural × 2", "Her last two bags should be running low."],
+  ["Lukas Weber", "Oct 29", "Guatemala Antigua × 1", "Close to the Sumatra he likes, a bit brighter."],
+  ["Hannah Lee", "No consent", "—", ""],
+] as const;
+
+function SampleTable() {
+  return (
+    <div className="mt-8 overflow-x-auto rounded-(--radius-panel) border border-line bg-raised">
+      <table className="w-full min-w-[34rem] text-left text-sm">
+        <thead className="bg-paper text-xs font-semibold">
+          <tr>
+            <th className="px-4 py-2.5">Customer</th>
+            <th className="px-4 py-2.5">Next email</th>
+            <th className="px-4 py-2.5">Product</th>
+            <th className="px-4 py-2.5">Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          {SAMPLE_ROWS.map(([name, next, item, why]) => (
+            <tr key={name} className="border-t border-line">
+              <td className="whitespace-nowrap px-4 py-2.5 font-medium">{name}</td>
+              <td className="num whitespace-nowrap px-4 py-2.5 text-ink-soft">{next}</td>
+              <td className="px-4 py-2.5">{item}</td>
+              <td className="px-4 py-2.5 text-ink-soft">{why}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function Home() {
   const { t } = useTranslation();
   return (
@@ -73,9 +107,10 @@ export default function Home() {
 
       <section className="py-20">
         <div className="ui-container grid gap-12 lg:grid-cols-2">
-          <div>
+          <div className="min-w-0">
             <h2 className="h-display text-3xl font-semibold tracking-[-0.025em]">{t("landing.owner.title")}</h2>
             <p className="mt-4 text-base leading-7 text-ink-soft">{t("landing.owner.body")}</p>
+            <SampleTable />
           </div>
           <div>
             <h2 className="h-display text-3xl font-semibold tracking-[-0.025em]">{t("landing.guard.title")}</h2>

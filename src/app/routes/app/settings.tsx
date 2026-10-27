@@ -6,27 +6,34 @@ import { useAccountPage } from "@/components/account/hooks";
 import { PageBody, PageHeader } from "@/components/ui/PageHeader";
 import { getShop, saveShop, type ShopRecord } from "@/lib/api-client";
 import { currencyDigits } from "@/lib/money";
+import { isDemoUser } from "@/lib/auth/demo-account";
 
 /** 店の名前、代金を受け取る PayPal のアカウント、通貨、送料 */
 export default function SettingsPage() {
   const { t } = useTranslation();
   const { openMobileNavigation, user } = useAccountPage();
   const shop = useQuery({ queryKey: ["shop"], queryFn: getShop });
+  // デモアカウントは共有なので、店の設定は見るだけ
+  const demo = isDemoUser(user);
   return (
     <>
-      <PageHeader title={t("settings.title")} onOpenMenu={openMobileNavigation} />
+      <PageHeader
+        title={t("settings.title")}
+        description={demo ? t("common.demoReadOnly") : undefined}
+        onOpenMenu={openMobileNavigation}
+      />
       <PageBody>
         {shop.isPending ? (
           <div className="h-80 max-w-2xl animate-pulse rounded-(--radius-panel) bg-paper" />
         ) : (
-          <ShopForm current={shop.data?.shop ?? null} ownerEmail={user.email} />
+          <ShopForm current={shop.data?.shop ?? null} ownerEmail={user.email} readOnly={demo} />
         )}
       </PageBody>
     </>
   );
 }
 
-function ShopForm({ current, ownerEmail }: { current: ShopRecord | null; ownerEmail: string }) {
+function ShopForm({ current, ownerEmail, readOnly }: { current: ShopRecord | null; ownerEmail: string; readOnly: boolean }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [form, setForm] = useState(() =>
@@ -66,7 +73,8 @@ function ShopForm({ current, ownerEmail }: { current: ShopRecord | null; ownerEm
   };
 
   return (
-    <form className="console-panel max-w-2xl space-y-4 p-5" onSubmit={submit}>
+    <form className="console-panel max-w-2xl p-5" onSubmit={submit}>
+      <fieldset className="space-y-4" disabled={readOnly}>
       <label className="block">
         <span className="console-label">{t("settings.name")}</span>
         <input className="console-input" required maxLength={120} value={form.name} onChange={(e) => set({ name: e.target.value })} />
@@ -112,11 +120,14 @@ function ShopForm({ current, ownerEmail }: { current: ShopRecord | null; ownerEm
           />
         </label>
       </div>
-      <div className="flex justify-end">
-        <button className="console-button-primary" type="submit" disabled={saving}>
-          {saving ? t("common.saving") : t("common.save")}
-        </button>
-      </div>
+      {!readOnly && (
+        <div className="flex justify-end">
+          <button className="console-button-primary" type="submit" disabled={saving}>
+            {saving ? t("common.saving") : t("common.save")}
+          </button>
+        </div>
+      )}
+      </fieldset>
     </form>
   );
 }

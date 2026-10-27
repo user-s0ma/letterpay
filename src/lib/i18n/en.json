@@ -41,7 +41,8 @@
       "minutesSeconds": "{{minutes}}m {{seconds}}s",
       "seconds": "{{seconds}}s"
     },
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "demoReadOnly": "The demo account can view this page but not change it."
   },
   "appShell": {
     "closeMenu": "Close menu",

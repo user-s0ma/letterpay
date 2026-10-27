@@ -170,6 +170,7 @@ console_.post("/letters/:id/send", async (c) => {
   const demo = isDemoUser(currentUser(c));
   try {
     const result = await sendLetter(c.env, row, demo ? "preview" : "email");
+    if (result.skipped) return c.json({ message: result.skipped }, 409);
     if (demo && result.preview) {
       return c.json({
         ok: true,

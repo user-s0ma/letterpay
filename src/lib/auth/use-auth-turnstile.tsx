@@ -3,7 +3,10 @@ import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-const SITE_KEY = import.meta.env.VITE_PUBLIC_TURNSTILE_SITE_KEY;
+// 手元 (http://localhost) では使わない (サーバー側の turnstileDisabled と同じ決まり)
+const SITE_KEY = import.meta.env.VITE_PUBLIC_APP_URL?.startsWith("http://localhost")
+  ? undefined
+  : import.meta.env.VITE_PUBLIC_TURNSTILE_SITE_KEY;
 const CAPTCHA_ERROR_CODES = new Set([
   "VERIFICATION_FAILED",
   "MISSING_RESPONSE",
@@ -19,7 +22,7 @@ export function useAuthTurnstile() {
   const ref = useRef<TurnstileInstance | null>(null);
 
   const captchaHeaders = useCallback(async (): Promise<Record<string, string>> => {
-    // サイトキーが空のとき (手元の開発) は Turnstile を使わない。サーバー側も外れている
+    // 手元では Turnstile を使わない。サーバー側も外れている
     if (!SITE_KEY) return {};
     const turnstile = ref.current;
     if (!turnstile) throw new Error(t("auth.captchaPreparing"));

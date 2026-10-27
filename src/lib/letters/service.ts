@@ -2,7 +2,7 @@ import { and, asc, desc, eq, inArray, isNull, lte, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
 import { DEMO_EMAIL } from "@/lib/auth/demo-account";
 import { customer, letter, product, purchase, shop, user } from "@/lib/db/schema";
-import { captureOrder, createOrder } from "@/lib/paypal";
+import { captureOrder, createOrder, getOrder } from "@/lib/paypal";
 import { renderLetterEmail } from "./email";
 import { planNextLetter, PlanRejected, writeReason, type PlannerContext } from "./planner";
 import { createLinkToken } from "./token";
@@ -91,19 +91,27 @@ export async function planFor(env: Env, userId: string, customerId: string) {
     .where(and(eq(customer.userId, userId), eq(customer.id, customerId)))
     .limit(1);
   if (!person) throw new LetterError("Customer not found");
-  await db
+  const cancelPlanned = db
     .update(letter)
     .set({ status: "canceled" })
     .where(and(eq(letter.customerId, customerId), eq(letter.status, "planned")));
-  if (!person.marketingConsentAt || person.unsubscribedAt) return null;
+  if (!person.marketingConsentAt || person.unsubscribedAt) {
+    await cancelPlanned;
+    return null;
+  }
 
+  // AI の答えが出てから、前の予定の取り消しと新しい予定の書き込みを1回の batch で行う
+  // (決め直しが重なっても予定が2通にならず、AI が失敗しても前の予定が残る)
   const context = await loadPlannerContext(env, userId, customerId);
   const plan = await planNextLetter(env, context);
   if (plan.action === "stop") {
-    await db
-      .update(customer)
-      .set({ lettersStoppedAt: new Date(), lettersStoppedReason: plan.timingReason })
-      .where(eq(customer.id, customerId));
+    await db.batch([
+      cancelPlanned,
+      db
+        .update(customer)
+        .set({ lettersStoppedAt: new Date(), lettersStoppedReason: plan.timingReason })
+        .where(eq(customer.id, customerId)),
+    ]);
     return null;
   }
   const row = {
@@ -117,11 +125,11 @@ export async function planFor(env: Env, userId: string, customerId: string) {
     quantity: plan.quantity!,
     reason: plan.reason!,
   };
-  await db.insert(letter).values(row);
-  await db
-    .update(customer)
-    .set({ lettersStoppedAt: null, lettersStoppedReason: null })
-    .where(eq(customer.id, customerId));
+  await db.batch([
+    cancelPlanned,
+    db.insert(letter).values(row),
+    db.update(customer).set({ lettersStoppedAt: null, lettersStoppedReason: null }).where(eq(customer.id, customerId)),
+  ]);
   return row;
 }
 
@@ -221,21 +229,23 @@ export async function sendLetter(env: Env, row: LetterRow, mode: "email" | "prev
     await db.update(letter).set({ status: "canceled", error }).where(eq(letter.id, row.id));
   };
   if (!person?.marketingConsentAt || person.unsubscribedAt) {
-    await skip("The customer does not receive emails");
-    return { preview: null };
+    const skipped = "The customer does not receive emails";
+    await skip(skipped);
+    return { preview: null, skipped };
   }
   if (!item?.active || item.stock < row.quantity) {
     // 在庫が足りなくなっていれば、今の商品の一覧で選び直す
-    await skip("Out of stock when sending");
-    await planFor(env, row.userId, row.customerId);
-    return { preview: null };
+    const skipped = "The product is out of stock, so a new email is being planned";
+    await skip(skipped);
+    await planNext(env, row);
+    return { preview: null, skipped };
   }
 
   const { message, payUrl, unsubscribeUrl } = await composeLetter(env, row, { owner, person, item });
   if (mode === "preview") {
     await db.update(letter).set({ status: "sent", sentAt: new Date(), error: null }).where(eq(letter.id, row.id));
-    await planFor(env, row.userId, row.customerId);
-    return { preview: { to: person.email, subject: message.subject, html: message.html, payUrl } };
+    await planNext(env, row);
+    return { preview: { to: person.email, subject: message.subject, html: message.html, payUrl }, skipped: null };
   }
   try {
     await env.EMAIL.send({
@@ -258,8 +268,15 @@ export async function sendLetter(env: Env, row: LetterRow, mode: "email" | "prev
   }
   await db.update(letter).set({ status: "sent", sentAt: new Date(), error: null }).where(eq(letter.id, row.id));
   // 送ったら、その次をすぐに決める (買われたら planFor が作り直す)
-  await planFor(env, row.userId, row.customerId);
-  return { preview: null };
+  await planNext(env, row);
+  return { preview: null, skipped: null };
+}
+
+/** 送ったあとに次のメールを決める。失敗しても、送ったことは取り消さない (次の決め直しで作られる) */
+async function planNext(env: Env, row: LetterRow) {
+  await planFor(env, row.userId, row.customerId).catch((error) =>
+    console.error("次のメールを決められませんでした:", row.customerId, error),
+  );
 }
 
 /** 毎日の見回り: 送る日になった予定を送る */
@@ -308,6 +325,14 @@ export async function startCheckout(env: Env, letterId: string) {
     .update(letter)
     .set({ clickedAt: sql`coalesce(${letter.clickedAt}, ${now.getTime()})` })
     .where(eq(letter.id, row.id));
+  // 前に開いたときの注文が同じ価格でまだ払える状態なら、それを使う
+  // (作り直すと、先に開いた画面で承認した客が「無効」になる)
+  if (row.paypalOrderId && row.checkoutUnitMinor === item.priceMinor) {
+    const previous = await getOrder(env, row.paypalOrderId).catch(() => null);
+    if (previous?.approveUrl && (previous.status === "CREATED" || previous.status === "PAYER_ACTION_REQUIRED")) {
+      return { state: "redirect" as const, url: previous.approveUrl };
+    }
+  }
   const token = await createLinkToken(env.LINK_SIGNING_SECRET, "pay", row.id);
   const base = appUrl(env);
   const order = await createOrder(
@@ -328,7 +353,7 @@ export async function startCheckout(env: Env, letterId: string) {
       returnUrl: `${base}/l/${token}/return`,
       cancelUrl: `${base}/l/${token}/cancel`,
     },
-    // 同じメールでも、開くたびに新しい注文にする (前の注文は期限が切れているかもしれない)
+    // 前の注文が使えないときは新しく作る (期限切れ、価格が変わった)
     `letter-${row.id}-${now.getTime()}`,
   );
   await db
@@ -354,9 +379,13 @@ export async function completeCheckout(env: Env, letterId: string, paypalOrderId
   }
   // 戻り先の URL の注文 ID は書き換えられるので、このメールで作った注文かを確かめる
   if (row.paypalOrderId !== paypalOrderId) return { state: "unavailable" as const };
+  // 受け取る前に、商品がまだ売られていて在庫があるかを確かめ直す (受け取らなければ請求されない)
+  const db = getDb(env);
+  const [item] = await db.select().from(product).where(eq(product.id, row.productId)).limit(1);
+  if (!item?.active || item.stock < row.quantity) return { state: "sold_out" as const, shopName: owner.name };
 
-  const capture = await captureOrder(env, paypalOrderId);
-  if (capture && capture.customId !== row.id) return { state: "unavailable" as const };
+  const { capture, customId } = await captureOrder(env, paypalOrderId);
+  if (customId !== row.id) return { state: "unavailable" as const };
   // 受け取りが待ち (PENDING) でも客の支払いは済んでいるので、購入として記録する
   if (!capture || (capture.status !== "COMPLETED" && capture.status !== "PENDING")) {
     return { state: "not_completed" as const, shopName: owner.name };
@@ -366,10 +395,17 @@ export async function completeCheckout(env: Env, letterId: string, paypalOrderId
   }
   if (row.checkoutUnitMinor === null) throw new LetterError("The checkout price was not recorded");
   const unitPriceMinor = row.checkoutUnitMinor;
-  const db = getDb(env);
   const now = new Date();
+  const paid = {
+    state: "paid" as const,
+    shopName: owner.name,
+    paidMinor: capture.amountMinor,
+    currency: owner.currency,
+    pending: capture.status === "PENDING",
+  };
   // D1 は途中で読み書きを挟むトランザクションを持たないので、3つの書き込みを1回の batch で行う
-  await db.batch([
+  try {
+    await db.batch([
     db
       .update(letter)
       .set({
@@ -393,20 +429,17 @@ export async function completeCheckout(env: Env, letterId: string, paypalOrderId
     }),
     db
       .update(product)
-      .set({ stock: sql`${product.stock} - ${row.quantity}` })
+      .set({ stock: sql`max(${product.stock} - ${row.quantity}, 0)` })
       .where(eq(product.id, row.productId)),
-  ]);
+    ]);
+  } catch (error) {
+    // 戻りの画面が二重に読まれると、後の方は記録済みで失敗する (batch は丸ごと戻る)
+    if ((await loadLetter(env, row.id))?.status === "paid") return paid;
+    throw error;
+  }
   // 買われたので、次のメールを決め直す
-  await planFor(env, row.userId, row.customerId).catch((error) =>
-    console.error("次のメールを決められませんでした:", row.customerId, error),
-  );
-  return {
-    state: "paid" as const,
-    shopName: owner.name,
-    paidMinor: capture.amountMinor,
-    currency: owner.currency,
-    pending: capture.status === "PENDING",
-  };
+  await planNext(env, row);
+  return paid;
 }
 
 /** アカウントを消すときに、まだ送っていないメールをすべて取り消す */

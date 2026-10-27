@@ -26,7 +26,9 @@ export async function loader({ params, request, context }: Route.LoaderArgs) {
         pending: result.pending,
       };
     }
-    if (result.state === "not_completed") return { state: result.state, shopName: result.shopName, paid: null, pending: false };
+    if (result.state === "not_completed" || result.state === "sold_out") {
+      return { state: result.state, shopName: result.shopName, paid: null, pending: false };
+    }
     return { state: result.state, shopName: null, paid: null, pending: false };
   } catch (error) {
     console.error("代金を受け取れませんでした:", letterId, orderId, error);
@@ -52,6 +54,13 @@ export default function PayReturn({ loaderData }: Route.ComponentProps) {
     return (
       <LetterNotice shopName={shopName} title="The payment did not go through">
         Open the link in the email again to retry.
+      </LetterNotice>
+    );
+  }
+  if (state === "sold_out") {
+    return (
+      <LetterNotice shopName={shopName} title="Sold out for now">
+        It sold out before the payment went through, so nothing was charged. We will write again soon.
       </LetterNotice>
     );
   }
