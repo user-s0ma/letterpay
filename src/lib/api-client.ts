@@ -1,6 +1,6 @@
 import { translate } from "@/lib/i18n";
 import type { PlannerContext } from "@/lib/letters/planner";
-import type { listLetterRows } from "@/lib/letters/service";
+import type { listLetterRows, listPurchaseRows } from "@/lib/letters/service";
 
 /*
  * 画面から呼ぶ API。店の人のもの (店・商品・客・メール) は /api の下にある。
@@ -114,6 +114,14 @@ export function sendLetterNow(id: string) {
 
 export function replanCustomer(customerId: string) {
   return apiRequest<{ ok: true }>(`/api/customers/${encodeURIComponent(customerId)}/plan`, send("POST"));
+}
+
+// ---------------------------------------------------------------- orders
+
+export type OrderRow = Awaited<ReturnType<typeof listPurchaseRows>>[number];
+
+export function listOrders() {
+  return apiRequest<{ items: OrderRow[] }>("/api/orders");
 }
 
 export type CustomerHistory = Pick<PlannerContext, "purchases" | "letters">;

@@ -477,3 +477,28 @@ export async function listLetterRows(env: Env, userId: string) {
     };
   });
 }
+
+/** 注文の表: 店のすべての購入を新しい順に。Letterpay のメールから払われたものは source が letterpay */
+export async function listPurchaseRows(env: Env, userId: string) {
+  const rows = await getDb(env)
+    .select({
+      id: purchase.id,
+      purchasedAt: purchase.purchasedAt,
+      customerName: customer.name,
+      country: customer.country,
+      productName: product.name,
+      quantity: purchase.quantity,
+      unitPriceMinor: purchase.unitPriceMinor,
+      source: purchase.source,
+    })
+    .from(purchase)
+    .innerJoin(customer, eq(customer.id, purchase.customerId))
+    .innerJoin(product, eq(product.id, purchase.productId))
+    .where(eq(purchase.userId, userId))
+    .orderBy(desc(purchase.purchasedAt));
+  return rows.map(({ purchasedAt, ...row }) => ({
+    ...row,
+    purchasedOn: utcDate(purchasedAt),
+    amountMinor: row.quantity * row.unitPriceMinor,
+  }));
+}

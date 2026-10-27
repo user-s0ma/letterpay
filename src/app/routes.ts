@@ -33,6 +33,7 @@ export default [
 
   route("app", "routes/app/_layout.tsx", [
     index("routes/app/_index.tsx"),
+    route("orders", "routes/app/orders.tsx"),
     route("products", "routes/app/products.tsx"),
     route("settings", "routes/app/settings.tsx"),
     route("account", "routes/app/account.tsx"),

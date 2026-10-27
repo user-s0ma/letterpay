@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, Outlet, redirect, useLocation } from "react-router";
 import type { Route } from "./+types/_layout";
-import { Coffee, Mail, Store, X } from "lucide-react";
+import { Coffee, Mail, Receipt, Store, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { auth } from "@/lib/auth/server";
@@ -32,6 +32,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     items: [
       { labelKey: "appShell.nav.letters", icon: Mail, path: "" },
+      { labelKey: "appShell.nav.orders", icon: Receipt, path: "/orders" },
       { labelKey: "appShell.nav.products", icon: Coffee, path: "/products" },
       { labelKey: "appShell.nav.settings", icon: Store, path: "/settings" },
     ],

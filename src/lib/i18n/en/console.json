@@ -9,6 +9,7 @@
   "appShell": {
     "nav": {
       "letters": "Emails",
+      "orders": "Orders",
       "products": "Products",
       "settings": "Shop"
     }
@@ -74,6 +75,26 @@
       "to": "To {{email}}",
       "sandboxBuyer": "PayPal sandbox buyer: {{email}} / {{password}}",
       "open": "Pay with PayPal"
+    }
+  },
+  "orders": {
+    "title": "Orders",
+    "summary_one": "{{count}} order paid from a Letterpay email · {{amount}}",
+    "summary_other": "{{count}} orders paid from Letterpay emails · {{amount}}",
+    "emptyTitle": "No orders yet",
+    "emptyDescription": "Load the demo shop from Emails.",
+    "columns": {
+      "date": "Date",
+      "customer": "Customer",
+      "country": "Country",
+      "coffee": "Coffee",
+      "bags": "Bags",
+      "amount": "Amount",
+      "source": "Source"
+    },
+    "source": {
+      "import": "Shop",
+      "letterpay": "Letterpay email"
     }
   },
   "products": {

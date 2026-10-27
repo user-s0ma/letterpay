@@ -9,6 +9,7 @@ import { PlanRejected } from "@/lib/letters/planner";
 import {
   LetterError,
   listLetterRows,
+  listPurchaseRows,
   loadPlannerContext,
   overrideLetter,
   planFor,
@@ -127,6 +128,8 @@ console_.put("/products/:id", async (c) => {
 
 /** 表の行: 客ごとの次のメールの予定と、最後に送ったメールの結果 */
 console_.get("/letters", async (c) => c.json({ items: await listLetterRows(c.env, currentUser(c).id) }));
+
+console_.get("/orders", async (c) => c.json({ items: await listPurchaseRows(c.env, currentUser(c).id) }));
 
 /** 店の人が予定 (送る日・商品・量) を直す */
 console_.put("/letters/:id", async (c) => {
