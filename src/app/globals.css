@@ -2,9 +2,8 @@
 
 /*
  * Letterpay design tokens (役割ごとの色)
- * 暗い面が既定。ライムがブランドカラーで、NVIDIA の緑 (#76B900) と混同しないよう黄色寄りにしてある。
- * - 暗いテーマ: ライムは文字・線・塗りのどれにも使える
- * - 明るいテーマ: ライムは塗り (濃い文字を載せる) だけ。文字・リンク・線は brand-ink (濃い緑) を使う
+ * 暗い面が既定。地と文字は、客に届くメールと同じ温かい調子にそろえる。
+ * - 文字は黒 (茶色がかった黒)。brand は青で、ボタンなどの塗り、リンク、選択中の印、強調する文字に使う
  * - earn (金色) は「入ってくるお金」(収益・チャージ) だけ、signal は状態 (処理中・要対応) だけに使う
  * 値は @theme が暗いテーマ、:root[data-theme="light"] が明るいテーマ。data-theme は root.tsx の
  * スクリプトが描画前に付ける。コントラスト比は README ではなく、このファイルの値で計算する。
@@ -19,22 +18,22 @@
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   /* THEME:dark */
-  --color-canvas: #1a1d1b;
-  --color-surface: #222623;
-  --color-raised: #2a2f2b;
-  --color-paper: #1e2220;
-  --color-ink: #e8ebe6;
-  --color-ink-soft: #bcc3bb;
-  --color-ink-mute: #9ba39a;
-  --color-line: #343a35;
-  --color-line-strong: #757e76;
+  --color-canvas: #1c1916;
+  --color-surface: #24201c;
+  --color-raised: #2c2723;
+  --color-paper: #211d1a;
+  --color-ink: #efe9e1;
+  --color-ink-soft: #cfc6bb;
+  --color-ink-mute: #a99e92;
+  --color-line: #3a342e;
+  --color-line-strong: #7d7268;
 
-  --color-brand: #d4f54c;
-  --color-brand-hover: #e3fa82;
-  --color-brand-tint: #2f381f;
-  --color-brand-ink: #d4f54c;
-  /* ライムの塗りの上に載せる文字色 */
-  --color-on-brand: #1a2108;
+  --color-brand: #9fb6e6;
+  --color-brand-hover: #b7c9ee;
+  --color-brand-tint: #222b3b;
+  --color-brand-ink: #a9bdea;
+  /* brand の塗りの上に載せる文字色 */
+  --color-on-brand: #101a30;
 
   --color-earn: #f2b84b;
   --color-earn-tint: #3a3221;
@@ -47,10 +46,10 @@
   --color-danger-tint: #3e2627;
   --color-on-danger: #2a0b0b;
 
-  --color-focus: #d4f54c;
-  --color-code: #1d211e;
-  --color-code-ink: #d3d9d1;
-  --color-overlay: rgb(12 14 13 / 0.66);
+  --color-focus: #a9bdea;
+  --color-code: #211d1a;
+  --color-code-ink: #ddd5ca;
+  --color-overlay: rgb(14 12 10 / 0.66);
 
   --radius-panel: 12px;
   --radius-control: 8px;
@@ -58,21 +57,21 @@
 
 /* THEME:light */
 :root[data-theme="light"] {
-  --color-canvas: #ffffff;
-  --color-surface: #ffffff;
-  --color-raised: #ffffff;
-  --color-paper: #f2f4ef;
-  --color-ink: #161a16;
-  --color-ink-soft: #454c44;
-  --color-ink-mute: #5f665e;
-  --color-line: #e1e4dd;
-  --color-line-strong: #858c83;
+  --color-canvas: #faf8f3;
+  --color-surface: #fffdf9;
+  --color-raised: #fffdf9;
+  --color-paper: #f3eee5;
+  --color-ink: #2b2420;
+  --color-ink-soft: #54473e;
+  --color-ink-mute: #6b5e54;
+  --color-line: #e6dfd3;
+  --color-line-strong: #8c7f72;
 
-  --color-brand: #d4f54c;
-  --color-brand-hover: #c4e83a;
-  --color-brand-tint: #eff8cf;
-  --color-brand-ink: #3d5f00;
-  --color-on-brand: #1a2108;
+  --color-brand: #28467f;
+  --color-brand-hover: #1f3968;
+  --color-brand-tint: #e5eaf3;
+  --color-brand-ink: #28467f;
+  --color-on-brand: #fffdf9;
 
   --color-earn: #8c5e00;
   --color-earn-tint: #fcf1d5;
@@ -84,10 +83,10 @@
   --color-danger-tint: #fdeceb;
   --color-on-danger: #ffffff;
 
-  --color-focus: #3d5f00;
-  --color-code: #f2f4ef;
-  --color-code-ink: #2b312a;
-  --color-overlay: rgb(22 26 22 / 0.5);
+  --color-focus: #28467f;
+  --color-code: #f3eee5;
+  --color-code-ink: #3a312b;
+  --color-overlay: rgb(43 36 32 / 0.45);
 }
 
 :root {
